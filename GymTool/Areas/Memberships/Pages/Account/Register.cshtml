@@ -1,0 +1,80 @@
+﻿@page "/Membresia/Registrar"
+@model RegisterModel
+
+
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+
+            <div class="col-xl col-md-7">
+                <div class="panel  panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Registrar personal</h3>
+                    </div><!--<div class="panel-heading">-->
+
+                    <div class="panel-body">
+                        <div class="card">
+
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Nombre" placeholder="Nombre" class="form-control" autofocus required>
+                                    <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Descripcion" placeholder="Descripcion" class="form-control" autofocus required>
+                                    <span asp-validation-for="Input.Descripcion" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+
+                                <div class="form-group">
+                                    <input type="number" asp-for="Input.Cantidad" placeholder="Cantidad" class="form-control" autofocus required value="1" min="1" max="31" step="1">
+                                    <span asp-validation-for="Input.Cantidad" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Periodo" placeholder="Periodo" class="form-control" autofocus required>
+                                    <span asp-validation-for="Input.Periodo" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Monto" placeholder="Monto" class="form-control" autofocus required>
+                                    <span asp-validation-for="Input.Monto" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col text-right">
+                                            @if (Model.Input.IdMembresia.Equals(0))
+                                            {
+                                                <a class="btn btn-danger text-white" asp-area="Memberships" asp-controller="Memberships" asp-action="Memberships">Cancelar</a>
+                                                <button type="submit" class="btn btn-success">Registrar</button>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-danger text-white" asp-route-id="@Model.Input.IdMembresia" asp-area="Memberships" asp-page="/Account/Details">Cancelar</a>
+                                                <button type="submit" class="btn btn-success" onclick="confirmar('Editar','Membresia')">Guardar</button>
+                                            }
+                                            <input type="hidden" name="accMembresia" id="accMembresia" value="false" />
+                                        </div>
+                                    </div>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <label class="text-danger">@Html.DisplayFor(m => m.Input.ErrorMessage)</label>
+
+                                </div><!--<div  class="form-group">-->
+                            </div><!--<div  class="card-body">-->
+                        </div><!--<div class="card">-->
+                    </div><!--<div class="panel-body">-->
+                </div><!--<div class="panel panel-primary">-->
+            </div> <!--<div class="col-xs-6 col-md-5">-->
+        </div> <!--<div class="row">-->
+    </form> <!-- <form method="post" enctype="multipart/form-data">-->
+</div> <!-- -->
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

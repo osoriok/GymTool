@@ -1,0 +1,199 @@
+﻿@page "/Clientes/Registrar"
+@model RegisterModel
+@{
+    var image = "";
+    if (Model.Input.Imagen != null)
+    {
+        image = "data:image/jpg;base64," + Convert.ToBase64String(Model.Input.Imagen,
+       0, Model.Input.Imagen.Length);
+    }
+    else
+    {
+        image = "/images/images/default.png";
+    }
+
+}
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+
+            <div class="col-sm-5 col-md-3">
+                <div class="card text-center">
+
+                    <div class="card-header">
+                        <output id="imageCustomer">
+                            <img src=@image class="imageUser" />
+                        </output><!-- <output id="imageUser"> -->
+                    </div><!-- <div class="card-header"> -->
+
+                    <div class="card-body">
+                        <div class="caption text-center">
+                            <label class="btn btn-primary" for="files">Seleccionar im&#225;gen</label>
+                            <input asp-for="Input.AvatarImage" accept="image/*" type="file" id="files">
+                        </div> <!-- <div class="caption text-center"> -->
+                    </div><!-- <div class="card-body"> -->
+
+                </div> <!-- <div class="card text-center"> -->
+            </div> <!--<div class="col-sm-6 col-md-3">-->
+
+            <div class="col-xl col-md-10">
+                <div class="panel  panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Registrar cliente</h3>
+                    </div><!--<div class="panel-heading">-->
+
+                    <div class="panel-body">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-xl">
+
+
+                                        <div class="form-group">
+                                            <input asp-for="Input.Cedula" placeholder="Identificaci&oacute;n" class="form-control" autofocus />
+                                            <span asp-validation-for="Input.Cedula" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input asp-for="Input.Nombre" placeholder="Nombre" class="form-control" />
+                                            <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input asp-for="Input.Apellidos" placeholder="Apellidos" class="form-control" />
+                                            <span asp-validation-for="Input.Apellidos" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <input type="date" asp-for="Input.FechaNacimiento" placeholder="Fecha Naciemiento" class="form-control">
+                                            <span asp-validation-for="Input.FechaNacimiento" class="text-danger"></span>
+                                        </div><!--<div  class="form-group">-->
+
+
+                                        <div class="form-group">
+                                            <input asp-for="Input.Telefono" placeholder="Tel&eacute;fono " class="form-control" />
+                                            <span asp-validation-for="Input.Telefono" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input asp-for="Input.Correo" placeholder="Correo" class="form-control" />
+                                            <span asp-validation-for="Input.Correo" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input asp-for="Input.Direccion" placeholder="Direcci&oacute;n" class="form-control" />
+                                            <span asp-validation-for="Input.Direccion" class="text-danger"></span>
+                                        </div>
+
+
+                                    </div>
+
+
+                                    <div class="col-xl">
+
+                                        <div class="form-group">
+                                            <input asp-for="Input.EmpleadoCodigo" placeholder="C&oacute;digo de empleado" class="form-control" autocomplete="off" autofocus  />
+                                            <span asp-validation-for="Input.EmpleadoCodigo" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+
+                                                <div class="col-md-3" style="left:20px">
+                                                    <input asp-for="Input.Alcohol" class="form-check-input" />
+                                                    <label asp-for="Input.Alcohol" class="control-label"></label>
+                                                </div>
+                                                <div class="col-md-3" style="left:20px">
+                                                    <input asp-for="Input.Asma" class="form-check-input" />
+                                                    <label asp-for="Input.Asma" class="control-label"></label>
+                                                </div>
+                                                <div class="col-md-4" style="left:20px">
+                                                    <input asp-for="Input.Obesidad" class="form-check-input" />
+                                                    <label asp-for="Input.Obesidad" class="control-label"></label>
+                                                </div>
+                                                
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3" style="left:20px">
+                                                    <input asp-for="Input.Fuma" class="form-check-input" />
+                                                    <label asp-for="Input.Fuma" class="control-label"></label>
+                                                </div>
+                                                <div class="col-md-3" style="left:20px">
+                                                    <input asp-for="Input.HTA" class="form-check-input" />
+                                                    <label asp-for="Input.HTA" class="control-label"></label>
+                                                </div>
+                                                <div class="col-md-3" style="left:20px">
+                                                    <input asp-for="Input.Fx" class="form-check-input" />
+                                                    <label asp-for="Input.Fx" class="control-label"></label>
+                                                </div>
+                                                <div class="col-md-2" style="left:20px">
+                                                    <input asp-for="Input.DM" class="form-check-input" />
+                                                    <label asp-for="Input.DM" class="control-label"></label>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            @if (!Model.Input.IdCliente.Equals(0))
+                                            {
+                                                @Html.DropDownList("Input.Membresia", new SelectList(Model.Input.membresiaLista, "Text", "Text"), new { @class = "form-control" });
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("Input.Membresia", new SelectList(Model.Input.membresiaLista, "Text", "Text"), "Seleccione una membresía", new { @class = "form-control" }) @*value = id seleccion, text= texto seleccion *@
+
+                                            }
+                                            <span asp-validation-for="Input.Membresia" class="text-danger"></span>
+
+                                        </div><!--<div  class="form-group">-->
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-danger">@Html.DisplayFor(m => m.Input.ErrorMessage)  </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col text-right">
+                                            <input type="hidden" name="accCliente" id="accCliente" value="false" />
+
+                                            @if (Model.Input.IdCliente.Equals(0))
+                                            {
+                                                <a class="btn btn-danger text-white" asp-area="Customers" asp-controller="Customers" asp-action="Customers">Cancelar</a>
+
+                                                <button type="submit" class="btn btn-success">Registrar</button>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-danger text-white" asp-route-id="@Model.Input.IdCliente" asp-area="Customers" asp-page="/Account/Details">Cancelar</a>
+                                                <button type="submit" class="btn btn-success" onclick="confirmar('Editar','Cliente')">Guardar</button>
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div><!--<div  class="form-group">-->
+
+                            </div><!--<div  class="card-body">-->
+
+
+                        </div><!--<div class="card">-->
+
+                    </div><!--<div class="panel-body">-->
+
+
+
+                </div><!--<div class="panel panel-primary">-->
+            </div> <!--<div class=""col-xl col-md-7">-->
+
+        </div> <!--<div class="row">-->
+
+    </form> <!-- <form method="post" enctype="multipart/form-data">-->
+</div> <!-- -->
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

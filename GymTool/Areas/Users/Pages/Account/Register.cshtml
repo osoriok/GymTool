@@ -1,0 +1,84 @@
+﻿@page "/Personal/Registrar"
+@model RegisterModel
+
+
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+
+            <div class="col-xl col-md-7">
+                <div class="panel  panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Registrar personal</h3>
+                    </div><!--<div class="panel-heading">-->
+
+                    <div class="panel-body">
+                        <div class="card">
+
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Cedula" placeholder="Identificaci&oacute;n" class="form-control" autofocus required>
+                                    <span asp-validation-for="Input.Cedula" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Nombre" placeholder="Nombre" class="form-control">
+                                    <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Apellidos" placeholder="Apellidos" class="form-control">
+                                    <span asp-validation-for="Input.Apellidos" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Telefono" placeholder="Tel&eacute;fono" class="form-control">
+                                    <span asp-validation-for="Input.Telefono" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.TelefonoEmergencia" placeholder="Tel&eacute;fono de Emergencia" class="form-control">
+                                    <span asp-validation-for="Input.TelefonoEmergencia" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <input asp-for="Input.Correo" placeholder="Correo electr&oacute;nico" class="form-control">
+                                    <span asp-validation-for="Input.Correo" class="text-danger"></span>
+                                </div><!--<div  class="form-group">-->
+
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col text-right">
+                                            @if (Model.Input.IdUsers.Equals(0))
+                                            {
+                                                <a class="btn btn-danger text-white" asp-area="Users" asp-controller="Users" asp-action="Users">Cancelar</a>
+                                                <button type="submit" class="btn btn-success">Registrar</button>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-danger text-white" asp-route-id="@Model.Input.IdUsers" asp-area="Users" asp-page="/Account/Details">Cancelar</a>
+                                                <button type="submit" class="btn btn-success" onclick="confirmar('Editar','Usuario')">Guardar</button>
+                                            }
+                                            <input type="hidden" name="accUsuario" id="accUsuario" value="false" />
+                                        </div>
+                                    </div>
+                                </div><!--<div  class="form-group">-->
+
+                                <div class="form-group">
+                                    <label class="text-danger">@Html.DisplayFor(m => m.Input.ErrorMessage)</label>
+                                </div><!--<div  class="form-group">-->
+                            </div><!--<div  class="card-body">-->
+                        </div><!--<div class="card">-->
+                    </div><!--<div class="panel-body">-->
+                </div><!--<div class="panel panel-primary">-->
+            </div> <!--<div class="col-xs-6 col-md-5">-->
+        </div> <!--<div class="row">-->
+    </form> <!-- <form method="post" enctype="multipart/form-data">-->
+</div> <!-- -->
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

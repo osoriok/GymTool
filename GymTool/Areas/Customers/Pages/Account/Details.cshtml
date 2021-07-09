@@ -1,0 +1,258 @@
+﻿@page "/Clientes/Informacion"
+@model DetailsModel
+@{
+    var image = "data:image/jpg;base64," + Convert.ToBase64String(Model.Input.DataCustomer.Imagen,
+        0, Model.Input.DataCustomer.Imagen.Length);
+    var name = Model.Input.DataCustomer.Nombre + " " + Model.Input.DataCustomer.Apellidos;
+}
+
+<div class="container">
+    <h1>
+        <a class="btn btn-primary text-white" asp-area="Customers" asp-controller="Customers" asp-action="Customers">Atr&aacute;s</a>
+        @name
+    </h1>
+
+    <div class="row">
+        <div class="col-lg">
+            <div class="card" >
+                <div class="card-header ">
+                    <img class='imageUserDetails' src="@image" />
+                </div>
+                <div class="card-body">
+                    <h2>Informaci&oacute;n</h2>
+
+                    <div class="row">
+                        <div class="col">
+
+                            <table class="tableCursos">
+                                <tbody>
+                                    <tr>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Identificaci&oacute;n
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataCustomer.Cedula</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Nombre
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@name</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Edad
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataCustomer.Edad</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Tel&eacute;fono de contacto
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataCustomer.Telefono</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Correo electronico
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataCustomer.Correo</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="col">
+                            <table class="tableCursos">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Empleado a cargo
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataCustomer.EmpleadoNombre</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+
+                                            <div class="row">
+
+                                                @if (Model.Input.DataCustomer.Alcohol)
+                                                {
+                                                    <p class="text-success">&#10003;</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">&#215;</p>
+                                                }
+                                                &nbsp;
+                                                <p>Alcohol</p>
+
+                                                &nbsp;
+                                                &nbsp;
+                                                &nbsp;
+
+                                                @if (Model.Input.DataCustomer.Asma)
+                                                {
+                                                    <p class="text-success">&#10003;</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">&#215;</p>
+                                                }
+                                                &nbsp;
+                                                <p>Asma</p>
+
+                                                &nbsp;
+                                                &nbsp;
+                                                &nbsp;
+
+                                                @if (Model.Input.DataCustomer.Obesidad)
+                                                {
+                                                    <p class="text-success">&#10003;</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">
+                                                        &#215;
+                                                    </p>
+                                                }
+                                                &nbsp;
+                                                <p>Obesidad</p>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                @if (Model.Input.DataCustomer.Fuma)
+                                                {
+                                                    <p class="text-success">&#10003;</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">&#215;</p>
+                                                }
+                                                &nbsp;
+                                                <p>Fuma</p>
+
+                                                &nbsp;
+                                                &nbsp;
+                                                &nbsp;
+
+                                                @if (Model.Input.DataCustomer.HTA)
+                                                {
+                                                    <p class="text-success">&#10003;</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">&#215;</p>
+                                                }
+                                                &nbsp;
+                                                <p>HTA</p>
+
+                                                &nbsp;
+                                                &nbsp;
+                                                &nbsp;
+
+                                                @if (Model.Input.DataCustomer.Fx)
+                                                {
+                                                    <p class="text-success">&#10003;</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">
+                                                        &#215;
+                                                    </p>
+                                                }
+                                                &nbsp;
+                                                <p>Fx</p>
+                                                &nbsp;
+                                                &nbsp;
+                                                &nbsp;
+
+                                                @if (Model.Input.DataCustomer.DM)
+                                                {
+                                                    <p class="text-success">&#10003;</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">
+                                                        &#215;
+                                                    </p>
+                                                }
+                                                &nbsp;
+                                                <p>DM</p>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Membres&iacute;a asociada
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataCustomer.Membresia</p>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="col text-right">
+
+                        <form asp-area="Customers" asp-page="/Account/Register" method="post">
+                            @{
+                                var dataCustomer = JsonConvert.SerializeObject(Model.Input.DataCustomer);
+                            }
+                            <input type="hidden" name="accCliente" id="accCliente" value="false" />
+                            <input type="hidden" name="DataCustomer" value="@dataCustomer" />
+                            <input type="submit" name="accion" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Cliente')">
+                            <input type="submit" name="accion" value="  Editar  " class="btn btn-success ">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
