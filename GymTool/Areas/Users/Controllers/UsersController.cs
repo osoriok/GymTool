@@ -36,7 +36,7 @@ namespace GymTool.Areas.Users.Controllers
 
         public IActionResult Users(int id, String filtrar, int registros)
         {
-            if (_signInManager.IsSignedIn(User))
+            if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
             {
                 var iduser = _userManager.GetUserId(User);
                 Object[] objects = new Object[3];

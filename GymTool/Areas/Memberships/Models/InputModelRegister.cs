@@ -20,6 +20,7 @@ namespace GymTool.Areas.Memberships.Models
 
         //variables Monto
         [Required(ErrorMessage = "El campo Monto es obligatorio. ")]
+        [RegularExpression(@"^(0|[1-9]\d*)$", ErrorMessage = "El formato del Monto ingresado no es válido. ")]
         public string Monto { set; get; }
 
         //variables Monto
@@ -27,7 +28,7 @@ namespace GymTool.Areas.Memberships.Models
         public String Cantidad { set; get; }
 
         //variables Monto
-        [Required(ErrorMessage = "El campo Periodo es obligatorio. ")]
+        [Required(ErrorMessage = "Seleccione un periodo. ")]
         public string Periodo { set; get; }
         public int GimnasioId { get; set; }
 

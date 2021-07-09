@@ -35,7 +35,7 @@ namespace GymTool.Areas.Customers.Models
         //variables Telefono
         [Required(ErrorMessage = "El campo Teléfono es obligatorio. ")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{2})\)?[-. ]?([0-9]{2})[-. ]?([0-9]{4})$", ErrorMessage = "El formato del Tel&eacute;fono ingresado no es v&aacute;lido. ")]
+        [RegularExpression(@"^\(?([0-9]{2})\)?[-. ]?([0-9]{2})[-. ]?([0-9]{4})$", ErrorMessage = "El formato del Tel&eacute;fono ingresado no es válido. ")]
         public string Telefono { set; get; }
 
         //variables Fechas

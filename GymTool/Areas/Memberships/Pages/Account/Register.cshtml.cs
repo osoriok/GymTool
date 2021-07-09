@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using GymTool.Areas.Memberships.Models;
 using GymTool.Data;
+using GymTool.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -23,6 +25,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
         private ApplicationDbContext _context;
         public static InputModel _dataInput;
         private static InputModelRegister _dataMembership1, _dataMembership2;
+        private LMembresia _membership;
 
 
         public RegisterModel(
@@ -33,6 +36,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _membership = new LMembresia(context);
         }
 
         public void OnGet(int id)
@@ -62,6 +66,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
                             Descripcion = _dataMembership1.Descripcion,
                             Cantidad = _dataMembership1.Cantidad,
                             Periodo = _dataMembership1.Periodo,
+                            periodosLista = _membership.getPeriodo(_dataMembership1.Periodo),
                             Monto = _dataMembership1.Monto,
                             GimnasioId = _dataMembership1.GimnasioId
                         };
@@ -75,7 +80,9 @@ namespace GymTool.Areas.Memberships.Pages.Account
             }
             else
             {
-                Input = new InputModel { };
+                Input = new InputModel {
+                    periodosLista = _membership.getPeriodos()
+                };
             }
 
             if (_dataMembership2 == null)
@@ -95,9 +102,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
                 {
                     if (await SaveAsync())
                     {
-                        _dataMembership2 = null;
-                        _dataMembership1 = null;
-                        _dataInput = null;
+                        anularValores();
                         return Redirect("/Memberships/Memberships?area=Memberships");//Users/Users
                     }
                     else
@@ -115,9 +120,8 @@ namespace GymTool.Areas.Memberships.Pages.Account
                         if (await UpdateAsync())
                         {
                             var url = $"/Membresia/Informacion?id={_dataMembership2.IdMembresia}";
-                            _dataMembership2 = null;
-                            _dataMembership1 = null;
-                            _dataInput = null;
+                            anularValores();
+
                             return Redirect(url);
                         }
                         else
@@ -150,9 +154,8 @@ namespace GymTool.Areas.Memberships.Pages.Account
                     {
                         if (await DeleteAsync())
                         {
-                            _dataMembership2 = null;
-                            _dataMembership1 = null;
-                            _dataInput = null;
+                            anularValores();
+
                             return Redirect("/Memberships/Memberships?area=Memberships");//Users/Users
                         }
                         else
@@ -383,7 +386,15 @@ namespace GymTool.Areas.Memberships.Pages.Account
         public InputModel Input { get; set; }
         public class InputModel : InputModelRegister
         {
+            public List<SelectListItem> periodosLista { get; set; }
 
+        }
+
+        private void anularValores()
+        {
+            _dataMembership2 = null;
+            _dataMembership1 = null;
+            _dataInput = null;
         }
     }
 }

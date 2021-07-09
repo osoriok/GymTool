@@ -96,9 +96,8 @@ namespace GymTool.Areas.Users.Pages.Account
                 {
                     if (await SaveAsync())
                     {
-                        _dataUser2 = null;
-                        _dataUser1 = null;
-                        _dataInput = null;
+                        anularValores();
+
                         return Redirect("/Users/Users?area=Users");//Users/Users
                     }
                     else
@@ -116,9 +115,8 @@ namespace GymTool.Areas.Users.Pages.Account
                         if (await UpdateAsync())
                         {
                             var url = $"/Personal/Informacion?id={_dataUser2.IdUsers}";
-                            _dataUser2 = null;
-                            _dataUser1 = null;
-                            _dataInput = null;
+                            anularValores();
+
                             return Redirect(url);
                         }
                         else
@@ -151,9 +149,7 @@ namespace GymTool.Areas.Users.Pages.Account
                     {
                         if (await DeleteAsync())
                         {
-                            _dataUser2 = null;
-                            _dataUser1 = null;
-                            _dataInput = null;
+                            anularValores();
                             return Redirect("/Users/Users?area=Users");//Users/Users
                         }
                         else
@@ -398,6 +394,14 @@ namespace GymTool.Areas.Users.Pages.Account
         public class InputModel : InputModelRegister
         {
            
+        }
+
+
+        private void anularValores()
+        {
+            _dataUser2 = null;
+            _dataUser1 = null;
+            _dataInput = null;
         }
     }
 }

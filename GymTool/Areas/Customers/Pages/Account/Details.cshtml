@@ -246,9 +246,12 @@
                             }
                             <input type="hidden" name="accCliente" id="accCliente" value="false" />
                             <input type="hidden" name="DataCustomer" value="@dataCustomer" />
-                            <input type="submit" name="accion" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Cliente')">
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <input type="submit" name="accion" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Cliente')">
+                            }
                             <input type="submit" name="accion" value="  Editar  " class="btn btn-success ">
-                        </form>
+                            </form>
                     </div>
                 </div>
             </div>

@@ -59,7 +59,7 @@
                                     <p>@Model.Input.DataMembership.Monto</p>
                                 </td>
                             </tr>
-                            
+
                         </tbody>
                     </table>
                     <div class="col text-right">
@@ -70,7 +70,10 @@
                             }
                             <input type="hidden" name="accMembresia" id="accMembresia" value="false" />
                             <input type="hidden" name="DataMembership" value="@dataMembership" />
-                            <input type="submit" name="accion" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Membresia')">
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <input type="submit" name="accion" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Membresia')">
+                            }
                             <input type="submit" name="accion" value="  Editar  " class="btn btn-success ">
                         </form>
                     </div>

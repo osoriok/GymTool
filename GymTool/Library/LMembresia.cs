@@ -14,7 +14,7 @@ namespace GymTool.Library
     public class LMembresia : ListObject
     {
 
-        public LMembresia(            
+        public LMembresia(
             ApplicationDbContext context)
         {
             _context = context;
@@ -36,6 +36,67 @@ namespace GymTool.Library
             return _selectLists;
         }
 
+        public List<SelectListItem> getMembresiasCliente(String membresia, String iduser)
+        {
+            List<SelectListItem> membresiasLista = new List<SelectListItem>();
+            membresiasLista.Add(new SelectListItem
+            {
+                Text = membresia
+            });
+            var membresias = getMembresias(iduser);
+            membresias.ForEach(item =>
+            {
+                if (item.Text != membresia)
+                {
+                    membresiasLista.Add(new SelectListItem
+                    {
+                        Text = item.Text
+                    });
+                }
+            });
+            return membresiasLista;
+        }
+
+
+        public List<SelectListItem> getPeriodos()
+        {
+            String[] periodos = { "Día", "Semana", "Mes", "Año" };
+            List<SelectListItem> _selectLists = new List<SelectListItem>();
+            foreach (var periodo in periodos)
+            {
+                _selectLists.Add(new SelectListItem
+                {
+                    Value = periodo,
+                    Text = periodo
+                });
+            }
+            return _selectLists;
+        }
+
+        public List<SelectListItem> getPeriodo(String periodo)
+        {
+            String[] periodos = { "Día", "Semana", "Mes", "Año" };
+
+            List<SelectListItem> periodosLista = new List<SelectListItem>();
+            periodosLista.Add(new SelectListItem
+            {
+                Text = periodo
+            });
+
+            foreach (var period in periodos)
+            {
+                if (!period.Equals(periodo))
+                {
+                    periodosLista.Add(new SelectListItem
+                    {
+                        Value = period,
+                        Text = period
+                    });
+                }
+            }
+            return periodosLista;
+        }
+
         public List<InputModelRegister> getMembresiasMostrar(String valor, int id, String iduser)
         {
             var userGimnasio = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();
@@ -52,7 +113,7 @@ namespace GymTool.Library
             {
                 if (id.Equals(0))
                 {
-                    listTbMembresias = _context.TbMembresia.Where(u => (u.Nombre.StartsWith(valor) || u.Descripcion.StartsWith(valor) ) && u.Estado.Equals(true)).ToList();
+                    listTbMembresias = _context.TbMembresia.Where(u => (u.Nombre.StartsWith(valor) || u.Descripcion.StartsWith(valor)) && u.Estado.Equals(true)).ToList();
                 }
                 else
                 {
@@ -81,7 +142,7 @@ namespace GymTool.Library
         public List<SelectListItem> getMembresia(int idmembresia)
         {
             List<SelectListItem> _selectList = new List<SelectListItem>();
-            var membresias =  _context.TbMembresia.Where(u => u.IdMembresia.Equals(idmembresia)).ToList();
+            var membresias = _context.TbMembresia.Where(u => u.IdMembresia.Equals(idmembresia)).ToList();
 
             if (membresias.Count.Equals(0))
             {
@@ -113,7 +174,7 @@ namespace GymTool.Library
             {
                 id = membresias[0].IdMembresia;
             }
-              
+
             return id;
         }
 

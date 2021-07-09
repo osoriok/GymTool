@@ -90,7 +90,7 @@ namespace GymTool.Areas.Customers.Pages.Account
                                 Imagen = _dataClient1.Imagen,
                                 EmpleadoId = _dataClient1.EmpleadoId,
                                 GimnasioId = _dataClient1.GimnasioId,
-                                membresiaLista = getMembresias(_dataClient1.Membresia, iduser),
+                                membresiaLista = _clientMembership.getMembresiasCliente(_dataClient1.Membresia, iduser),
                                 FechaInscripcion = _dataClient1.FechaInscripcion,
                                 Alcohol = _dataClient1.Alcohol,
                                 Fuma = _dataClient1.Fuma,
@@ -140,9 +140,8 @@ namespace GymTool.Areas.Customers.Pages.Account
 
                     if (await SaveAsync())
                     {
-                        _dataClient2 = null;
-                        _dataClient1 = null;
-                        _dataInput = null;
+                        anularValores();
+
                         return Redirect("/Customers/Customers?area=Customers");
                     }
                     else
@@ -158,9 +157,8 @@ namespace GymTool.Areas.Customers.Pages.Account
                         if (await UpdateAsync())
                         {
                             var url = $"/Clientes/Informacion?id={_dataClient2.IdCliente}";
-                            _dataClient2 = null;
-                            _dataClient1 = null;
-                            _dataInput = null;
+                            anularValores();
+                           
                             return Redirect(url);
                         }
                         else
@@ -185,9 +183,8 @@ namespace GymTool.Areas.Customers.Pages.Account
                     {
                         if (await DeleteAsync())
                         {
-                            _dataClient2 = null;
-                            _dataClient1 = null;
-                            _dataInput = null;
+                            anularValores();
+
                             return Redirect("/Customers/Customers?area=Customers");//Users/Users
                         }
                         else
@@ -492,26 +489,13 @@ namespace GymTool.Areas.Customers.Pages.Account
             return valor;
         }
 
-        private List<SelectListItem> getMembresias(String membresia, String iduser)
+        private void anularValores()
         {
-            List<SelectListItem> membresiasLista = new List<SelectListItem>();
-            membresiasLista.Add(new SelectListItem
-            {
-                Text = membresia
-            });
-            var membresias = _clientMembership.getMembresias(iduser);
-            membresias.ForEach(item =>
-            {
-                if (item.Text != membresia)
-                {
-                    membresiasLista.Add(new SelectListItem
-                    {
-                        Text = item.Text
-                    });
-                }
-            });
-            return membresiasLista;
+            _dataClient2 = null;
+            _dataClient1 = null;
+            _dataInput = null;
         }
+       
 
     }
 }
