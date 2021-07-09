@@ -71,8 +71,12 @@ namespace GymTool.Areas.Users.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            if (_signInManager.IsSignedIn(User) )
+            {
+                await _signInManager.SignOutAsync();
+            }
             return RedirectToAction(nameof(HomeController.Index), "Home");
+
         }
     }
 }

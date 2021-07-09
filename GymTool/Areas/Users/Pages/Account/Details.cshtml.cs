@@ -26,13 +26,16 @@ namespace GymTool.Areas.Users.Pages.Account
         }
         public void OnGet(int id)
         {
-            var data = _user.getTUsuariosAsync(null, id, "");
-            if (0 < data.Result.Count)
+            if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
             {
-                Input = new InputModel
+                var data = _user.getTUsuariosAsync(null, id, "");
+                if (0 < data.Result.Count)
                 {
-                    DataUser = data.Result.ToList().Last(),
-                };
+                    Input = new InputModel
+                    {
+                        DataUser = data.Result.ToList().Last(),
+                    };
+                }
             }
         }
         [BindProperty]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GymTool.Areas.Memberships.Models;
+using GymTool.Controllers;
 using GymTool.Data;
 using GymTool.Library;
 using Microsoft.AspNetCore.Authorization;
@@ -41,221 +42,237 @@ namespace GymTool.Areas.Memberships.Pages.Account
 
         public void OnGet(int id)
         {
+            if (_signInManager.IsSignedIn(User))
+            {
 
-            if (id.Equals(0))
-            {
-                _dataMembership2 = null;
-                _dataInput = null;
-            }
-            if (_dataInput != null || _dataMembership1 != null || _dataMembership2 != null)
-            {
-                if (_dataInput != null)
+                if (id.Equals(0))
                 {
-                    Input = _dataInput;
+                    _dataMembership2 = null;
+                    _dataInput = null;
+                }
+                if (_dataInput != null || _dataMembership1 != null || _dataMembership2 != null)
+                {
+                    if (_dataInput != null)
+                    {
+                        Input = _dataInput;
+                    }
+                    else
+                    {
+                        if (_dataMembership1 != null || _dataMembership2 != null)
+                        {
+                            if (_dataMembership2 != null)
+                                _dataMembership1 = _dataMembership2;
+                            Input = new InputModel
+                            {
+                                IdMembresia = _dataMembership1.IdMembresia,
+                                Nombre = _dataMembership1.Nombre,
+                                Descripcion = _dataMembership1.Descripcion,
+                                Cantidad = _dataMembership1.Cantidad,
+                                Periodo = _dataMembership1.Periodo,
+                                periodosLista = _membership.getPeriodo(_dataMembership1.Periodo),
+                                Monto = _dataMembership1.Monto,
+                                GimnasioId = _dataMembership1.GimnasioId
+                            };
+                            if (_dataInput != null)
+                            {
+                                Input.ErrorMessage = _dataInput.ErrorMessage;
+                            }
+                        }
+                    }
+
                 }
                 else
                 {
-                    if (_dataMembership1 != null || _dataMembership2 != null)
+                    Input = new InputModel
                     {
-                        if (_dataMembership2 != null)
-                            _dataMembership1 = _dataMembership2;
-                        Input = new InputModel
-                        {
-                            IdMembresia = _dataMembership1.IdMembresia,
-                            Nombre = _dataMembership1.Nombre,
-                            Descripcion = _dataMembership1.Descripcion,
-                            Cantidad = _dataMembership1.Cantidad,
-                            Periodo = _dataMembership1.Periodo,
-                            periodosLista = _membership.getPeriodo(_dataMembership1.Periodo),
-                            Monto = _dataMembership1.Monto,
-                            GimnasioId = _dataMembership1.GimnasioId
-                        };
-                        if (_dataInput != null)
-                        {
-                            Input.ErrorMessage = _dataInput.ErrorMessage;
-                        }
-                    }
+                        periodosLista = _membership.getPeriodos()
+                    };
                 }
 
-            }
-            else
-            {
-                Input = new InputModel {
-                    periodosLista = _membership.getPeriodos()
-                };
-            }
+                if (_dataMembership2 == null)
+                {
+                    _dataMembership2 = _dataMembership1;
+                }
 
-            if (_dataMembership2 == null)
-            {
-                _dataMembership2 = _dataMembership1;
+                _dataMembership1 = null;
             }
-
-            _dataMembership1 = null;
-
         }
 
         public async Task<IActionResult> OnPost(String dataMembership, String accion, String accMembresia)
         {
-            if (dataMembership == null)
+            if (_signInManager.IsSignedIn(User))
             {
-                if (_dataMembership2 == null)
+                if (dataMembership == null)
                 {
-                    if (await SaveAsync())
+                    if (_dataMembership2 == null)
                     {
-                        anularValores();
-                        return Redirect("/Memberships/Memberships?area=Memberships");//Users/Users
+                        if (await SaveAsync())
+                        {
+                            anularValores();
+                            return Redirect("/Memberships/Memberships?area=Memberships");//Users/Users
+                        }
+                        else
+                        {
+                            return Redirect("/Membresia/Registrar?id=1");///onget con el id
+                        }
                     }
                     else
                     {
-                        return Redirect("/Membresia/Registrar?id=1");///onget con el id
+                        //if (User.IsInRole("Administrador"))
+                        //{ 
+                        if (accMembresia.Equals("true"))
+                        {
+
+                            if (await UpdateAsync())
+                            {
+                                var url = $"/Membresia/Informacion?id={_dataMembership2.IdMembresia}";
+                                anularValores();
+
+                                return Redirect(url);
+                            }
+                            else
+                            {
+                                return Redirect("/Membresia/Registrar?id=1");
+                            }
+                        }
+                        else
+                        {
+
+                            var url = $"/Membresia/Informacion?id={_dataMembership2.IdMembresia}";
+                            return Redirect(url);
+                        }
+
+                        //}
+                        //else
+                        //{
+                        //    return Redirect("/Users/Users?area=Users");
+                        //}
+
                     }
                 }
                 else
                 {
-                    //if (User.IsInRole("Administrador"))
-                    //{ 
-                    if (accMembresia.Equals("true"))
+                    _dataMembership1 = JsonConvert.DeserializeObject<InputModelRegister>(dataMembership);
+
+                    if (accion.Equals("Eliminar"))
                     {
-
-                        if (await UpdateAsync())
+                        if (accMembresia.Equals("true"))
                         {
-                            var url = $"/Membresia/Informacion?id={_dataMembership2.IdMembresia}";
-                            anularValores();
+                            if (await DeleteAsync())
+                            {
+                                anularValores();
 
-                            return Redirect(url);
-                        }
-                        else
-                        {
-                            return Redirect("/Membresia/Registrar?id=1");
-                        }
-                    }
-                    else
-                    {
-
-                        var url = $"/Membresia/Informacion?id={_dataMembership2.IdMembresia}";
-                        return Redirect(url);
-                    }
-
-                    //}
-                    //else
-                    //{
-                    //    return Redirect("/Users/Users?area=Users");
-                    //}
-
-                }
-            }
-            else
-            {
-                _dataMembership1 = JsonConvert.DeserializeObject<InputModelRegister>(dataMembership);
-
-                if (accion.Equals("Eliminar"))
-                {
-                    if (accMembresia.Equals("true"))
-                    {
-                        if (await DeleteAsync())
-                        {
-                            anularValores();
-
-                            return Redirect("/Memberships/Memberships?area=Memberships");//Users/Users
+                                return Redirect("/Memberships/Memberships?area=Memberships");//Users/Users
+                            }
+                            else
+                            {
+                                var url = $"/Membresia/Informacion?id={_dataMembership1.IdMembresia}";
+                                return Redirect(url);
+                            }
                         }
                         else
                         {
                             var url = $"/Membresia/Informacion?id={_dataMembership1.IdMembresia}";
                             return Redirect(url);
                         }
+
                     }
                     else
                     {
-                        var url = $"/Membresia/Informacion?id={_dataMembership1.IdMembresia}";
-                        return Redirect(url);
+                        _dataMembership2 = null;
+                        _dataInput = null;
+                        return Redirect("/Membresia/Registrar?id=1");
+
                     }
 
                 }
-                else
-                {
-                    _dataMembership2 = null;
-                    _dataInput = null;
-                    return Redirect("/Membresia/Registrar?id=1");
-
-                }
-
+            }
+            else
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
 
         private async Task<bool> SaveAsync()
         {
-            _dataInput = Input;
             var valor = false;
-            var succes = false;
-            var idgimnasio = 0;
+
 
             if (_signInManager.IsSignedIn(User))
             {
-                if (ModelState.IsValid)
+
+                _dataInput = Input;
+                var succes = false;
+                var idgimnasio = 0;
+
+                if (_signInManager.IsSignedIn(User))
                 {
-                    var strategy = _context.Database.CreateExecutionStrategy();
-                    await strategy.ExecuteAsync(async () =>
+                    if (ModelState.IsValid)
                     {
-                        using (var transaction = _context.Database.BeginTransaction())
+                        var strategy = _context.Database.CreateExecutionStrategy();
+                        await strategy.ExecuteAsync(async () =>
                         {
-                            try
+                            using (var transaction = _context.Database.BeginTransaction())
                             {
-
-                                var iduser = _userManager.GetUserId(User); //usuario admin iniciado
-                                var administrador = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();//administrador
-
-                                if (!administrador.Count.Equals(0))
+                                try
                                 {
-                                    idgimnasio = administrador[0].GimnasioId;//id gimnasio del administrador
-                                    succes = true;
-                                }
 
-                                if (succes)
-                                {
-                                    var t_membership = new TbMembresia
+                                    var iduser = _userManager.GetUserId(User); //usuario admin iniciado
+                                    var administrador = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();//administrador
+
+                                    if (!administrador.Count.Equals(0))
                                     {
-                                        Nombre = Input.Nombre,
-                                        Descripcion = Input.Descripcion,
-                                        Monto = Input.Monto,
-                                        Cantidad = Input.Cantidad,
-                                        Periodo = Input.Periodo,
-                                        GimnasioId = idgimnasio,
-                                        Estado = true
-                                    };
-                                    await _context.AddAsync(t_membership);
-                                    _context.SaveChanges();
+                                        idgimnasio = administrador[0].GimnasioId;//id gimnasio del administrador
+                                        succes = true;
+                                    }
 
-                                    transaction.Commit();
-                                    _dataInput = null;
-                                    valor = true;
+                                    if (succes)
+                                    {
+                                        var t_membership = new TbMembresia
+                                        {
+                                            Nombre = Input.Nombre,
+                                            Descripcion = Input.Descripcion,
+                                            Monto = Input.Monto,
+                                            Cantidad = Input.Cantidad,
+                                            Periodo = Input.Periodo,
+                                            GimnasioId = idgimnasio,
+                                            Estado = true
+                                        };
+                                        await _context.AddAsync(t_membership);
+                                        _context.SaveChanges();
+
+                                        transaction.Commit();
+                                        _dataInput = null;
+                                        valor = true;
+                                    }
+                                    else
+                                    {
+                                        valor = false;
+                                        transaction.Rollback();
+                                    }
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    valor = false;
+                                    _dataInput.ErrorMessage = ex.Message;
                                     transaction.Rollback();
+                                    valor = false;
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                _dataInput.ErrorMessage = ex.Message;
-                                transaction.Rollback();
-                                valor = false;
-                            }
-                        }
-                    });
-
-                }
-                else
-                {
-                    foreach (var modelState in ModelState.Values)
-                    {
-                        foreach (var error in modelState.Errors)
-                        {
-                            _dataInput.ErrorMessage += error.ErrorMessage;
-                        }
+                        });
 
                     }
-                    valor = false;
+                    else
+                    {
+                        foreach (var modelState in ModelState.Values)
+                        {
+                            foreach (var error in modelState.Errors)
+                            {
+                                _dataInput.ErrorMessage += error.ErrorMessage;
+                            }
+
+                        }
+                        valor = false;
+                    }
                 }
             }
 
@@ -266,49 +283,54 @@ namespace GymTool.Areas.Memberships.Pages.Account
         {
 
             var valor = false;
-            var strategy = _context.Database.CreateExecutionStrategy();
+
             if (_signInManager.IsSignedIn(User))
             {
-                await strategy.ExecuteAsync(async () =>
+
+
+                var strategy = _context.Database.CreateExecutionStrategy();
+                if (_signInManager.IsSignedIn(User))
                 {
-                    using (var transaction = _context.Database.BeginTransaction())
+                    await strategy.ExecuteAsync(async () =>
                     {
-
-                        try
+                        using (var transaction = _context.Database.BeginTransaction())
                         {
 
-                            var t_membership = new TbMembresia
+                            try
                             {
-                                IdMembresia = _dataMembership2.IdMembresia,
-                                Nombre = Input.Nombre,
-                                Descripcion = Input.Descripcion,
-                                Monto = Input.Monto,
-                                Cantidad = Input.Cantidad,
-                                Periodo = Input.Periodo,
-                                GimnasioId = _dataMembership2.GimnasioId,
-                                Estado = true
-                            };
-                            _context.Update(t_membership);
-                            _context.SaveChanges();
 
-                            transaction.Commit();
-                            valor = true;
+                                var t_membership = new TbMembresia
+                                {
+                                    IdMembresia = _dataMembership2.IdMembresia,
+                                    Nombre = Input.Nombre,
+                                    Descripcion = Input.Descripcion,
+                                    Monto = Input.Monto,
+                                    Cantidad = Input.Cantidad,
+                                    Periodo = Input.Periodo,
+                                    GimnasioId = _dataMembership2.GimnasioId,
+                                    Estado = true
+                                };
+                                _context.Update(t_membership);
+                                _context.SaveChanges();
 
+                                transaction.Commit();
+                                valor = true;
+
+
+                            }
+                            catch (Exception ex)
+                            {
+                                _dataInput = Input;
+                                _dataInput.IdMembresia = _dataMembership2.IdMembresia;
+                                _dataInput.ErrorMessage = ex.Message;
+                                transaction.Rollback();
+                                valor = false;
+                            }
 
                         }
-                        catch (Exception ex)
-                        {
-                            _dataInput = Input;
-                            _dataInput.IdMembresia = _dataMembership2.IdMembresia;
-                            _dataInput.ErrorMessage = ex.Message;
-                            transaction.Rollback();
-                            valor = false;
-                        }
-
-                    }
-                });
+                    });
+                }
             }
-
             return valor;
         }
 
@@ -316,69 +338,73 @@ namespace GymTool.Areas.Memberships.Pages.Account
         private async Task<bool> DeleteAsync()
         {
             var valor = false;
-            var strategy = _context.Database.CreateExecutionStrategy();
-            await strategy.ExecuteAsync(async () =>
+
+            if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
             {
-                using (var transaction = _context.Database.BeginTransaction())
+
+                var strategy = _context.Database.CreateExecutionStrategy();
+                await strategy.ExecuteAsync(async () =>
                 {
-                    try
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        int cont = 0;
-                        var clientList = _context.TbCliente.Where(u => u.Estado.Equals(true)).ToList();
-                        var expedienteList = new List<Customers.Models.TbExpediente>();
-                        if (!clientList.Count.Equals(0))
+                        try
                         {
-                            foreach (var client in clientList)
+                            int cont = 0;
+                            var clientList = _context.TbCliente.Where(u => u.Estado.Equals(true)).ToList();
+                            var expedienteList = new List<Customers.Models.TbExpediente>();
+                            if (!clientList.Count.Equals(0))
                             {
-                                expedienteList = _context.TbExpediente.Where(u => u.MembresiaId.Equals(_dataMembership1.IdMembresia) && u.ClienteId.Equals(client.IdCliente)).ToList();
-                                if (!expedienteList.Count.Equals(0))
+                                foreach (var client in clientList)
                                 {
-                                    cont++;
+                                    expedienteList = _context.TbExpediente.Where(u => u.MembresiaId.Equals(_dataMembership1.IdMembresia) && u.ClienteId.Equals(client.IdCliente)).ToList();
+                                    if (!expedienteList.Count.Equals(0))
+                                    {
+                                        cont++;
+                                    }
                                 }
+
+
+                            }
+                            if (cont == 0)
+                            {
+                                var t_membership = new TbMembresia
+                                {
+                                    IdMembresia = _dataMembership1.IdMembresia,
+                                    Nombre = _dataMembership1.Nombre,
+                                    Descripcion = _dataMembership1.Descripcion,
+                                    Cantidad = _dataMembership1.Cantidad,
+                                    Periodo = _dataMembership1.Periodo,
+                                    Monto = _dataMembership1.Monto,
+                                    GimnasioId = _dataMembership1.GimnasioId,
+                                    Estado = false
+                                };
+                                _context.Update(t_membership);
+                                _context.SaveChanges();
+
+                                transaction.Commit();
+                                valor = true;
+
+                            }
+                            else
+                            {
+                                _dataInput = Input;
+                                _dataInput.IdMembresia = _dataMembership1.IdMembresia;
+                                _dataInput.ErrorMessage = $"Existen clientes activos con esta membresía. ";
+                                valor = false;
                             }
 
-
                         }
-                        if (cont == 0)
-                        {
-                            var t_membership = new TbMembresia
-                            {
-                                IdMembresia = _dataMembership1.IdMembresia,
-                                Nombre = _dataMembership1.Nombre,
-                                Descripcion = _dataMembership1.Descripcion,
-                                Cantidad = _dataMembership1.Cantidad,
-                                Periodo = _dataMembership1.Periodo,
-                                Monto = _dataMembership1.Monto,
-                                GimnasioId = _dataMembership1.GimnasioId,
-                                Estado = false
-                            };
-                            _context.Update(t_membership);
-                            _context.SaveChanges();
-
-                            transaction.Commit();
-                            valor = true;
-
-                        }
-                        else
+                        catch (Exception ex)
                         {
                             _dataInput = Input;
                             _dataInput.IdMembresia = _dataMembership1.IdMembresia;
-                            _dataInput.ErrorMessage = $"Existen clientes activos con esta membresía. ";
+                            _dataInput.ErrorMessage = ex.Message;
+                            transaction.Rollback();
                             valor = false;
                         }
-
                     }
-                    catch (Exception ex)
-                    {
-                        _dataInput = Input;
-                        _dataInput.IdMembresia = _dataMembership1.IdMembresia;
-                        _dataInput.ErrorMessage = ex.Message;
-                        transaction.Rollback();
-                        valor = false;
-                    }
-                }
-            });
-
+                });
+            }
             return valor;
         }
 
