@@ -40,6 +40,22 @@ namespace GymTool.Areas.Memberships.Pages.Account
                         DataMembership = data.ToList().Last(),
                     };
                 }
+                else
+                {
+                    Response.Redirect("/Memberships/Memberships?area=Memberships");
+                    Input = new InputModel
+                    {
+                        DataMembership = null,
+                    };
+                }
+            }
+            else
+            {
+                Response.Redirect("https://localhost:44312/");
+                Input = new InputModel
+                {
+                    DataMembership = null,
+                };
             }
         }
         [BindProperty]

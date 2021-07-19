@@ -45,7 +45,7 @@ namespace GymTool.Library
                 }
                 else
                 {
-                    listUser = _context.TUsers.Where(u => u.IdUsers.Equals(id)).ToList();
+                    listUser = _context.TUsers.Where(u => u.IdUsers.Equals(id) && u.Estado.Equals(true)).ToList();
                 }
             }
 

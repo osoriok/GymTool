@@ -1,101 +1,104 @@
 ﻿@page "/Personal/Informacion"
 @model DetailsModel
 @{
-    var name = Model.Input.DataUser.Nombre + " " + Model.Input.DataUser.Apellidos;
-}
+    if (Model.Input.DataUser != null)
+    {
+        var name = Model.Input.DataUser.Nombre + " " + Model.Input.DataUser.Apellidos;
 
-<div class="container">
+        <div class="container p-4" style="min-width: 320px">
 
-    <h1>
-        <a class="btn btn-primary text-white" asp-area="Users" asp-controller="Users" asp-action="Users">Atr&aacute;s</a>
-        @name
-    </h1>
-    <div class="row">
-
-
-        <div class="col-sm">
-            <div class="card">
-                <div class="card-body">
-                    <h2>Informaci&oacute;n</h2>
+            <h1>
+                <a title="Atr&aacute;s" class="btn btn-primary text-white" asp-area="Users" asp-controller="Users" asp-action="Users">Atr&aacute;s</a>
+                @name
+            </h1>
+            <div class="row">
 
 
-                    <table class="tableCursos">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Identificaci&oacute;n
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@Model.Input.DataUser.Cedula</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Nombre
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@name</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    C&oacute;digo
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@Model.Input.DataUser.Codigo</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Tel&eacute;fonos de contacto
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@Model.Input.DataUser.Telefono</p>
-                                    <p>@Model.Input.DataUser.TelefonoEmergencia</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Correo electronico
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@Model.Input.DataUser.Correo</p>
-                                </td>
-                            </tr>
+                <div class="col" style="min-width: 300px">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Informaci&oacute;n</h2>
 
-                            <tr>
-                                <td>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="col text-right">
 
-                        <form asp-area="Users" asp-page="Register" method="post">
-                            @{
-                                var dataUser = JsonConvert.SerializeObject(Model.Input.DataUser);
-                            }
-                            <input type="hidden" name="accUsuario" id="accUsuario" value="false" />
-                            <input type="hidden" name="DataUser" value="@dataUser" />
-                            <input type="submit" name="accion" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Usuario')">
-                            <input type="submit" name="accion" value="  Editar  " class="btn btn-success ">
-                        </form>
+                            <table class="tableCursos">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Identificaci&oacute;n
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataUser.Cedula</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Nombre
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@name</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            C&oacute;digo
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataUser.Codigo</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Tel&eacute;fonos de contacto
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataUser.Telefono</p>
+                                            <p>@Model.Input.DataUser.TelefonoEmergencia</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Correo electronico
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataUser.Correo</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="col text-right">
+
+                                <form asp-area="Users" asp-page="Register" method="post">
+                                    @{
+                                        var dataUser = JsonConvert.SerializeObject(Model.Input.DataUser);
+                                    }
+                                    <input type="hidden" name="accUsuario" id="accUsuario" value="false" />
+                                    <input type="hidden" name="DataUser" value="@dataUser" />
+                                    <input type="submit" name="accion" title="Eliminar"  value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Usuario')">
+                                    <input type="submit" name="accion" title="Editar"  value="  Editar  " class="btn btn-success ">
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
+
+
         </div>
-
-    </div>
-
-
-</div>
+    }
+}

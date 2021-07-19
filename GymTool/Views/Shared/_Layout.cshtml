@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject GymTool.Data.ApplicationDbContext Context
 
 
 <!DOCTYPE html>
@@ -8,16 +9,52 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="HandheldFriendly" content="true" />
     <title>@ViewData["Title"] GymTool </title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/Style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothnes/jquery-ui.css"></script>
 
 </head>
 
 @{
+    var name = "";
+    var correo = "";
     var image = "/images/images/default.png";
+    var calendarimage = "/images/system/agenda.png";
+    var imgtool = "../images/system/gymtool.png";
+    var imgicon = "../images/system/toolicono.png";
+    var iconogymtool = "../images/system/gymtoolicono.png";
+    String roleAdmin = "Administrador";
+    if (SignInManager.IsSignedIn(User))
+    {
+
+
+        var id = UserManager.GetUserId(User);
+        var users = Context.Users.Where(u => u.Id.Equals(id)).ToList();
+        var user = Context.TUsers.Where(u => u.UsuarioId.Equals(id)).ToList();
+        correo = users[0].Email;
+
+        if (user.Count.Equals(0))
+        {
+            name = "Usuario";
+        }
+        else
+        {
+            if (User.IsInRole(roleAdmin))
+            {
+
+                name = user[0].Nombre + ' ' + user[0].Apellidos;
+            }
+            else
+            {
+                name = "Instructor";
+            }
+        }
+    }
+
 }
 <body>
     <div class="wrapper d-flex align-items-stretch">
@@ -25,9 +62,21 @@
         @if (SignInManager.IsSignedIn(User))
         {
             <nav id="sidebar">
-                <div class="p-4 pt-5">
-                    <a href="#" class="img logo rounded-circle mb-5" style="background-image: url(@image); "></a>
+                <div class="p-3 pt-3">
+                    @*<ul class="list-unstyled components mb-5">
+                        <li class="">
+                            <a href="#" class="img logo rounded-circle mb-5" style="background-image: url(@image); "></a>
+                        </li>
+                    </ul>*@
+
                     <ul class="list-unstyled components mb-5">
+                        <li class="">
+                            <p title="@name" class="perfil"> @name</p>
+                            <p title="@correo" class="perfil"> @correo</p>
+                            <a> </a>
+                        </li>
+
+
                         <li class="">
                             <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Clientes</a>
                             <ul class="collapse list-unstyled" id="homeSubmenu">
@@ -47,7 +96,7 @@
                         <li class="">
                             <a asp-area="Memberships" asp-controller="Memberships" asp-action="Memberships">Membres&iacute;a</a>
                         </li>
-                        @if (User.IsInRole("Administrador"))
+                        @if (User.IsInRole(roleAdmin))
                         {
                             <li class="">
                                 <a asp-area="Users" asp-controller="Users" asp-action="Users">Personal</a>
@@ -59,53 +108,67 @@
                 </div>
             </nav>
         }
-        <div id="content">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
-                <div class="container-fluid">
-                    @if (SignInManager.IsSignedIn(User))
-                    {
+       
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-                        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                            <i class="fa fa-bars"></i> Men&uacute;
-                            <span class="sr-only">Toggle Menu</span>
-                        </button>
-
-                        <div class="bg-img-light-header">
-                            <img src="../images/system/toolicono.png">
-                            <img style="height: 50px; width: 100px;" src="../images/system/gymtool.png">
-                        </div>
-
-                        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <i class="fa fa-bars"></i>
-                        </button>
-
-                    }
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <ul class="navbar-nav flex-grow-1">
-                                <li class="nav-item">
-                                    <a class="nav-link text-white" asp-area="Principal" asp-controller="Principal" asp-action="Principal">Principal</a>
-                                </li>
-                            </ul>
-                        }
-                        <partial name="_LoginPartial" />
+                    <div class="bg-img-light-header">
+                        <img src="@imgicon">
+                        <img style="height: 40px; width: 100px;" src="@imgtool">
                     </div>
                 </div>
 
-            </nav>
+            }
+        <div class="container-fluid">
+            @if (SignInManager.IsSignedIn(User))
+            {
 
 
-            <div class="container">
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
 
-            </div>
+                <button title="Men&uacute;" type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i> Men&uacute;
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+
+                @*<button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>*@
+
+            }
+
+            &nbsp;
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" style="font-family: sans-serif; font-size: large " title="Agenda" asp-area="Principal" asp-controller="Principal" asp-action="Principal">Agenda</a>
+                    </li>
+                </ul>
+                <partial name="_LoginPartial" />
+
+            }
+            else
+            {
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <partial name="_LoginPartial" />
+                </div>
+            }
+
 
         </div>
+
+        </nav>
+
+        <div class="" >
+            @RenderBody()
+        </div>
+
+    </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

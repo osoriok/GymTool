@@ -11,27 +11,28 @@ namespace GymTool.Areas.Memberships.Models
     {
 
         //variables Nombre
-        [Required(ErrorMessage = "El campo Nombre es obligatorio. ")]
+        [Required(ErrorMessage = "El campo nombre es obligatorio. ")]
         public string Nombre { set; get; }
 
         //variables Descripcion
-        [Required(ErrorMessage = "El campo Descripcion es obligatorio. ")]
+        [Required(ErrorMessage = "El campo descripci&oacute;n es obligatorio. ")]
         public string Descripcion { set; get; }
 
         //variables Monto
-        [Required(ErrorMessage = "El campo Monto es obligatorio. ")]
-        [RegularExpression(@"^(0|[1-9]\d*)$", ErrorMessage = "El formato del Monto ingresado no es válido. ")]
+        [Required(ErrorMessage = "El campo monto es obligatorio. ")]
+        [RegularExpression(@"^(0|[1-9]\d*)$", ErrorMessage = "S&oacute;lo se permiten n&uacute;meros. ")]
         public string Monto { set; get; }
 
         //variables Monto
-        [Required(ErrorMessage = "El campo Cantidad es obligatorio. ")]
+        [Required(ErrorMessage = "El campo cantidad es obligatorio. ")]
+        [RegularExpression(@"^(0|[1-9]\d*)$", ErrorMessage = "S&oacute;lo se permiten n&uacute;meros. ")]
         public String Cantidad { set; get; }
 
         //variables Monto
-        [Required(ErrorMessage = "Seleccione un periodo. ")]
+        [Required(ErrorMessage = "Selecciona un periodo. ")]
         public string Periodo { set; get; }
         public int GimnasioId { get; set; }
-
+        public int CantidadClientes { get; set; }
         public int IdMembresia { get; set; }
 
         [TempData]

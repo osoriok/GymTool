@@ -2217,6 +2217,10 @@ textarea.form-control {
     margin-bottom: 1rem
 }
 
+.form-group p{
+    margin-bottom: -2px
+}
+
 .form-text {
     display: block;
     margin-top: .25rem
@@ -4376,7 +4380,7 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    padding: .5rem 1rem
+    padding: .5rem 1rem;
 }
 
     .navbar > .container, .navbar > .container-fluid {
@@ -4417,7 +4421,7 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
     flex-direction: column;
     padding-left: 0;
     margin-bottom: 0;
-    list-style: none
+    list-style: none;
 }
 
     .navbar-nav .nav-link {
@@ -6964,8 +6968,8 @@ a.bg-danger:hover, a.bg-danger:focus, button.bg-danger:hover, button.bg-danger:f
 .bg-img-light-header { /*fondo navbar*/
     top: 8px !important;
     position: absolute !important;
-    left: 40% !important;
-    min-width: 200px !important;
+    left: 39% !important;
+    min-width: 205px !important;
 }
 
 a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus {
@@ -10824,9 +10828,10 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
     background: #fff;
     border: none;
     border-radius: 0;
-    min-width: 420px;
-    margin-bottom: 40px;
-    -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,.1);
+    width:100%;
+    min-width: 360px;
+/*    margin-bottom: 40px;
+*/    -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,.1);
     box-shadow: 1px 1px 3px rgba(0,0,0,.1)
 }
 
@@ -10849,8 +10854,8 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
 }
 
 #sidebar { /*fondo sidebar*/
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 200px;
+    max-width: 30%;
     background: #118dd0;
     color: #fff;
     -webkit-transition: all .3s;
@@ -10859,7 +10864,7 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
 }
 
     #sidebar.active {
-        margin-left: -300px
+        margin-left: -200px
     }
 
     #sidebar .logo {
@@ -10907,7 +10912,7 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
 
 @media(max-width:991.98px) {
     #sidebar {
-        margin-left: -300px
+        margin-left: -200px
     }
 
         #sidebar.active {
@@ -10949,7 +10954,7 @@ a[data-toggle=collapse] {
     border-color: #f8b739
 }
 
-    .btn.btn-primary:hover, .btn.btn-primary:focus {
+    .btn.btn-primary:hover {
         background: #b08023 !important;
         border-color: #b08023 !important
     }

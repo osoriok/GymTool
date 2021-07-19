@@ -7,6 +7,10 @@
     @if (SignInManager.IsSignedIn(User))
     {
         var name = "";
+        var iniciales = "";
+        String roleAdmin = "Administrador";
+        var image = "../images/system/logout.png";
+
         var id = UserManager.GetUserId(User);
         var user = Context.TUsers.Where(u => u.UsuarioId.Equals(id)).ToList();
         if (user.Count.Equals(0))
@@ -15,38 +19,44 @@
         }
         else
         {
-         
-            if (User.IsInRole("Administrador"))
+
+            if (User.IsInRole(roleAdmin))
             {
-                name = $"{user[0].Nombre}";
+                name = $"{user[0].Nombre}" + $" {user[0].Apellidos}";
+
+                iniciales = $"{user[0].Nombre}".Substring(0, 1) + $"{user[0].Apellidos}".Substring(0, 1);
             }
             else
             {
                 name = "Instructor";
+                iniciales = "INS";
 
             }
 
         }
 
-        <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Principal" asp-controller="Principal" asp-action="Principal">¡Hola @name!</a>
+        <li class="nav-item dropdowns ">
+            <div class="circulo notranslate">
+                <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><h4 title="@name">@iniciales</h4></a>
+            </div>
+            <div class="dropdowns-content">
+                <a asp-area="Users" asp-controller="Users" asp-action="Logout">Cerrar Sesi&#243;n</a>
+            </div>
         </li>
 
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Users" asp-controller="Users" asp-action="Logout">
-                <button type="submit" class="nav-link btn btn-link text-white">Cerrar sesión</button>
-            </form>
-        </li>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">¡Bienvenido!</a>
+        var iconogymtool = "../images/system/gymtoolicono.png";
+
+        <li class="nav-item" style=" float: left">
+            <a class="nav-link text-white" style="font-family: sans-serif; font-size: large" title="Manage">Bienvenido</a>
         </li>
 
         <li class="nav-item">
-            <img class="bg-img-light-login" src="../images/system/gymtoolicono.png">
+            <img class="bg-img-light-login" src="@iconogymtool">
         </li>
+
     }
 
 </ul>

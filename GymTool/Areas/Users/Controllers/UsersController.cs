@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 namespace GymTool.Areas.Users.Controllers
 {
     [Area("Users")]
-    [Authorize]
     public class UsersController : Controller
     {
         private UserManager<IdentityUser> _userManager;
@@ -22,6 +21,8 @@ namespace GymTool.Areas.Users.Controllers
 
         private LUser _user;
         private static DataPaginador<InputModelRegister> models;
+        private String roleAdmin = "Administrador";
+
 
         public UsersController(
             UserManager<IdentityUser> userManager,
@@ -36,7 +37,7 @@ namespace GymTool.Areas.Users.Controllers
 
         public IActionResult Users(int id, String filtrar, int registros)
         {
-            if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
+            if (_signInManager.IsSignedIn(User) && User.IsInRole(roleAdmin))
             {
                 var iduser = _userManager.GetUserId(User);
                 Object[] objects = new Object[3];
@@ -49,7 +50,7 @@ namespace GymTool.Areas.Users.Controllers
                 }
                 else
                 {
-                    objects[0] = "No hay datos que mostrar";
+                    objects[0] = "0";
                     objects[1] = "No hay datos que mostrar";
                     objects[2] = new List<InputModelRegister>();
                 }

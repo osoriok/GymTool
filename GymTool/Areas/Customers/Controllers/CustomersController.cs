@@ -30,7 +30,7 @@ namespace GymTool.Areas.Customers.Controllers
             _signInManager = signInManager;
             _customer = new LCustomers(context);
         }
-        public IActionResult Customers(int id, String filtrar)
+        public IActionResult Customers(int id, String filtrar, int registros)
         {
             if (_signInManager.IsSignedIn(User))
             {
@@ -42,11 +42,11 @@ namespace GymTool.Areas.Customers.Controllers
                 {
                     var url = Request.Scheme + "://" + Request.Host.Value;
                     objects = new LPaginador<InputModelRegister>().paginador(data,
-                        id, 10, "Customers", "Customers", "Customers", url);
+                        id, registros, "Customers", "Customers", "Customers", url);
                 }
                 else
                 {
-                    objects[0] = "No hay datos que mostrar";
+                    objects[0] = "0";
                     objects[1] = "No hay datos que mostrar";
                     objects[2] = new List<InputModelRegister>();
                 }

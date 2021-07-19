@@ -1,87 +1,118 @@
 ﻿@page "/Membresia/Informacion"
 @model DetailsModel
 @{
-    var name = Model.Input.DataMembership.Nombre;
-}
-<div class="container">
+    String roleAdmin = "Administrador";
+    if (Model.Input.DataMembership != null)
+    {
+        var name = Model.Input.DataMembership.Nombre;
 
-    <h1>
-        <a class="btn btn-primary text-white" asp-area="Memberships" asp-controller="Memberships" asp-action="Memberships">Atr&aacute;s</a>
-        @name
-    </h1>
-    <div class="row">
-        <div class="col-sm">
-            <div class="card">
-                <div class="card-body">
-                    <h2>Informaci&oacute;n</h2>
+        <div class="container p-4" style="min-width: 320px">
+
+            <h1>
+                <a title="Atr&aacute;s" class="btn btn-primary text-white" asp-area="Memberships" asp-controller="Memberships" asp-action="Memberships">Atr&aacute;s</a>
+                @name
+            </h1>
+            <div class="row">
+                <div class="col" style="min-width: 300px">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Informaci&oacute;n</h2>
 
 
-                    <table class="tableCursos">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Nombre
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@name</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Descripci&oacute;n
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@Model.Input.DataMembership.Descripcion</p>
-                                </td>
-                            </tr>
+                            <table class="tableCursos">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Nombre
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@name</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Descripci&oacute;n
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataMembership.Descripcion</p>
+                                        </td>
+                                    </tr>
 
-                            <tr>
-                                <th>
-                                    Periodo
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@Model.Input.DataMembership.Cantidad @Model.Input.DataMembership.Periodo</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Monto
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p>@Model.Input.DataMembership.Monto</p>
-                                </td>
-                            </tr>
+                                    <tr>
+                                        <th>
+                                            Clientes asociados
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @if (!Model.Input.DataMembership.CantidadClientes.Equals(0))
+                                            {
+                                            <p class="text-success">@Model.Input.DataMembership.CantidadClientes</p>
+                                            }
+                                            else
+                                            {
+                                        <p class="text-danger">
+                                            @Model.Input.DataMembership.CantidadClientes
+                                        </p>
+                                            }
+                                        </td>
+                                    </tr>
 
-                        </tbody>
-                    </table>
-                    <div class="col text-right">
+                                   
 
-                        <form asp-area="Memberships" asp-page="Register" method="post">
-                            @{
-                                var dataMembership = JsonConvert.SerializeObject(Model.Input.DataMembership);
-                            }
-                            <input type="hidden" name="accMembresia" id="accMembresia" value="false" />
-                            <input type="hidden" name="DataMembership" value="@dataMembership" />
-                            @if (User.IsInRole("Administrador"))
-                            {
-                                <input type="submit" name="accion" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Membresia')">
-                            }
-                            <input type="submit" name="accion" value="  Editar  " class="btn btn-success ">
-                        </form>
+
+                                    <tr>
+                                        <th>
+                                            Periodo
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataMembership.Cantidad @Model.Input.DataMembership.Periodo</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Monto
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>@Model.Input.DataMembership.Monto</p>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div class="col text-right">
+
+                                <form asp-area="Memberships" asp-page="Register" method="post">
+                                    @{
+                                        var dataMembership = JsonConvert.SerializeObject(Model.Input.DataMembership);
+                                    }
+                                    <input type="hidden" name="accMembresia" id="accMembresia" value="false" />
+                                    <input type="hidden" name="DataMembership" value="@dataMembership" />
+                                    @if (User.IsInRole(roleAdmin))
+                                    {
+                                        <input type="submit" name="accion" title="Eliminar" value="Eliminar" class="btn btn-danger text-white" onclick="javascript: confirmar('Eliminar','Membresia')">
+                                    }
+                                    <input type="submit" name="accion" title="Editar" value="  Editar  " class="btn btn-success ">
+                                </form>
+                            </div>
+                            <div class="form-group">
+                                <label class="text-danger">@Model.Input.DataMembership.ErrorMessage</label>
+                            </div><!--<div  class="form-group">-->
+                        </div>
                     </div>
                 </div>
+
             </div>
+
+
         </div>
-
-    </div>
-
-
-</div>
+    }
+}

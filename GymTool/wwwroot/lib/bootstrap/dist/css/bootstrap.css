@@ -1998,6 +1998,10 @@ textarea.form-control {
   margin-bottom: 1rem;
 }
 
+    .form-group p {
+        margin-bottom: -2px
+    }
+
 .form-text {
   display: block;
   margin-top: 0.25rem;

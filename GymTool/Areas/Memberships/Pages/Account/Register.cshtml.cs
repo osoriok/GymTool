@@ -27,6 +27,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
         public static InputModel _dataInput;
         private static InputModelRegister _dataMembership1, _dataMembership2;
         private LMembresia _membership;
+        private String roleAdmin = "Administrador";
 
 
         public RegisterModel(
@@ -55,6 +56,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
                     if (_dataInput != null)
                     {
                         Input = _dataInput;
+                        Input.periodosLista = _membership.getPeriodos();
                     }
                     else
                     {
@@ -118,8 +120,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
                     }
                     else
                     {
-                        //if (User.IsInRole("Administrador"))
-                        //{ 
+                        
                         if (accMembresia.Equals("true"))
                         {
 
@@ -139,14 +140,10 @@ namespace GymTool.Areas.Memberships.Pages.Account
                         {
 
                             var url = $"/Membresia/Informacion?id={_dataMembership2.IdMembresia}";
+                            anularValores();
+
                             return Redirect(url);
                         }
-
-                        //}
-                        //else
-                        //{
-                        //    return Redirect("/Users/Users?area=Users");
-                        //}
 
                     }
                 }
@@ -167,12 +164,15 @@ namespace GymTool.Areas.Memberships.Pages.Account
                             else
                             {
                                 var url = $"/Membresia/Informacion?id={_dataMembership1.IdMembresia}";
+                                anularValores();
+
                                 return Redirect(url);
                             }
                         }
                         else
                         {
                             var url = $"/Membresia/Informacion?id={_dataMembership1.IdMembresia}";
+                            anularValores();
                             return Redirect(url);
                         }
 
@@ -197,68 +197,68 @@ namespace GymTool.Areas.Memberships.Pages.Account
         {
             var valor = false;
 
-
             if (_signInManager.IsSignedIn(User))
             {
-
                 _dataInput = Input;
-                var succes = false;
                 var idgimnasio = 0;
 
                 if (_signInManager.IsSignedIn(User))
                 {
                     if (ModelState.IsValid)
                     {
-                        var strategy = _context.Database.CreateExecutionStrategy();
-                        await strategy.ExecuteAsync(async () =>
+
+                        var iduser = _userManager.GetUserId(User); //usuario admin iniciado
+                        var administrador = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();//administrador
+
+                        if (!administrador.Count.Equals(0))
                         {
-                            using (var transaction = _context.Database.BeginTransaction())
+                            idgimnasio = administrador[0].GimnasioId;//id gimnasio del administrador
+                            var memberList = _context.TbMembresia.Where(u => u.Nombre.Equals(Input.Nombre) && u.GimnasioId.Equals(idgimnasio)).ToList();
+                            if (memberList.Count.Equals(0))
                             {
-                                try
+
+                                var strategy = _context.Database.CreateExecutionStrategy();
+                                await strategy.ExecuteAsync(async () =>
                                 {
-
-                                    var iduser = _userManager.GetUserId(User); //usuario admin iniciado
-                                    var administrador = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();//administrador
-
-                                    if (!administrador.Count.Equals(0))
+                                    using (var transaction = _context.Database.BeginTransaction())
                                     {
-                                        idgimnasio = administrador[0].GimnasioId;//id gimnasio del administrador
-                                        succes = true;
-                                    }
-
-                                    if (succes)
-                                    {
-                                        var t_membership = new TbMembresia
+                                        try
                                         {
-                                            Nombre = Input.Nombre,
-                                            Descripcion = Input.Descripcion,
-                                            Monto = Input.Monto,
-                                            Cantidad = Input.Cantidad,
-                                            Periodo = Input.Periodo,
-                                            GimnasioId = idgimnasio,
-                                            Estado = true
-                                        };
-                                        await _context.AddAsync(t_membership);
-                                        _context.SaveChanges();
+                                            
+                                            var t_membership = new TbMembresia
+                                            {
+                                                Nombre = Input.Nombre,
+                                                Descripcion = Input.Descripcion,
+                                                Monto = Input.Monto,
+                                                Cantidad = Input.Cantidad,
+                                                Periodo = Input.Periodo,
+                                                GimnasioId = idgimnasio,
+                                                Estado = true
+                                            };
+                                            await _context.AddAsync(t_membership);
+                                            _context.SaveChanges();
 
-                                        transaction.Commit();
-                                        _dataInput = null;
-                                        valor = true;
+                                            transaction.Commit();
+                                            _dataInput = null;
+                                            valor = true;
+                                            
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _dataInput.ErrorMessage = ex.Message;
+                                            transaction.Rollback();
+                                            valor = false;
+                                        }
                                     }
-                                    else
-                                    {
-                                        valor = false;
-                                        transaction.Rollback();
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    _dataInput.ErrorMessage = ex.Message;
-                                    transaction.Rollback();
-                                    valor = false;
-                                }
+                                });
+
                             }
-                        });
+                            else
+                            {
+                                _dataInput.ErrorMessage = $"La membresía con nombre {Input.Nombre} ya está registrada. ";
+                                valor = false;
+                            }
+                        }
 
                     }
                     else
@@ -287,48 +287,57 @@ namespace GymTool.Areas.Memberships.Pages.Account
             if (_signInManager.IsSignedIn(User))
             {
 
-
                 var strategy = _context.Database.CreateExecutionStrategy();
                 if (_signInManager.IsSignedIn(User))
                 {
-                    await strategy.ExecuteAsync(async () =>
+
+                    var memberList = _context.TbMembresia.Where(u => u.Nombre.Equals(Input.Nombre) && u.IdMembresia != _dataMembership2.IdMembresia).ToList();
+                    if (memberList.Count.Equals(0))
                     {
-                        using (var transaction = _context.Database.BeginTransaction())
+
+                        await strategy.ExecuteAsync(async () =>
                         {
-
-                            try
+                            using (var transaction = _context.Database.BeginTransaction())
                             {
 
-                                var t_membership = new TbMembresia
+                                try
                                 {
-                                    IdMembresia = _dataMembership2.IdMembresia,
-                                    Nombre = Input.Nombre,
-                                    Descripcion = Input.Descripcion,
-                                    Monto = Input.Monto,
-                                    Cantidad = Input.Cantidad,
-                                    Periodo = Input.Periodo,
-                                    GimnasioId = _dataMembership2.GimnasioId,
-                                    Estado = true
-                                };
-                                _context.Update(t_membership);
-                                _context.SaveChanges();
 
-                                transaction.Commit();
-                                valor = true;
+                                    var t_membership = new TbMembresia
+                                    {
+                                        IdMembresia = _dataMembership2.IdMembresia,
+                                        Nombre = Input.Nombre,
+                                        Descripcion = Input.Descripcion,
+                                        Monto = Input.Monto,
+                                        Cantidad = Input.Cantidad,
+                                        Periodo = Input.Periodo,
+                                        GimnasioId = _dataMembership2.GimnasioId,
+                                        Estado = true
+                                    };
+                                    _context.Update(t_membership);
+                                    _context.SaveChanges();
 
+                                    transaction.Commit();
+                                    valor = true;
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    igualarValoresUpdate(ex.Message);
+                                    transaction.Rollback();
+                                    valor = false;
+                                }
 
                             }
-                            catch (Exception ex)
-                            {
-                                _dataInput = Input;
-                                _dataInput.IdMembresia = _dataMembership2.IdMembresia;
-                                _dataInput.ErrorMessage = ex.Message;
-                                transaction.Rollback();
-                                valor = false;
-                            }
+                        });
 
-                        }
-                    });
+                    }
+                    else
+                    {
+                        igualarValoresUpdate($"La membresía con nombre {Input.Nombre} ya está registrada. ");
+                        valor = false;
+                    }
+
                 }
             }
             return valor;
@@ -339,7 +348,7 @@ namespace GymTool.Areas.Memberships.Pages.Account
         {
             var valor = false;
 
-            if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
+            if (_signInManager.IsSignedIn(User) && User.IsInRole(roleAdmin))
             {
 
                 var strategy = _context.Database.CreateExecutionStrategy();
@@ -387,18 +396,14 @@ namespace GymTool.Areas.Memberships.Pages.Account
                             }
                             else
                             {
-                                _dataInput = Input;
-                                _dataInput.IdMembresia = _dataMembership1.IdMembresia;
-                                _dataInput.ErrorMessage = $"Existen clientes activos con esta membresía. ";
+                                igualarValoresDelete($"Existen clientes activos con la membresía que deseas eliminar. ");
                                 valor = false;
                             }
 
                         }
                         catch (Exception ex)
                         {
-                            _dataInput = Input;
-                            _dataInput.IdMembresia = _dataMembership1.IdMembresia;
-                            _dataInput.ErrorMessage = ex.Message;
+                            igualarValoresDelete(ex.Message);
                             transaction.Rollback();
                             valor = false;
                         }
@@ -421,6 +426,21 @@ namespace GymTool.Areas.Memberships.Pages.Account
             _dataMembership2 = null;
             _dataMembership1 = null;
             _dataInput = null;
+        }
+
+        private void igualarValoresUpdate(String mensaje)
+        {
+            _dataInput = Input;
+            _dataInput.IdMembresia = _dataMembership2.IdMembresia;
+            _dataInput.ErrorMessage = mensaje;
+
+        }
+
+        private void igualarValoresDelete(String mensaje)
+        {
+            _dataInput = Input;
+            _dataInput.IdMembresia = _dataMembership1.IdMembresia;
+            _dataInput.ErrorMessage = mensaje;
         }
     }
 }

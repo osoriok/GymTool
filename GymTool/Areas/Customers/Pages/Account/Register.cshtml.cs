@@ -29,6 +29,7 @@ namespace GymTool.Areas.Customers.Pages.Account
         private ApplicationDbContext _context;
         private LMembresia _clientMembership;
         private LCustomers _customer;
+        private String roleAdmin = "Administrador";
 
         private static InputModel _dataInput;
         private Uploadimage _uploadimage;
@@ -57,7 +58,7 @@ namespace GymTool.Areas.Customers.Pages.Account
             if (_signInManager.IsSignedIn(User))
             {
                 var iduser = _userManager.GetUserId(User);
-
+                var codUsuario = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();
                 if (id.Equals(0))
                 {
                     _dataClient2 = null;
@@ -69,7 +70,13 @@ namespace GymTool.Areas.Customers.Pages.Account
                     {
                         Input = _dataInput;
                         Input.membresiaLista = _clientMembership.getMembresias(iduser);
-                        Input.Imagen = _dataClient2.Imagen;
+                        if (_dataClient2 != null) {
+                            Input.Imagen = _dataClient2.Imagen;
+                        }
+                        else
+                        {
+                            Input.Imagen = _dataInput.Imagen;
+                        }
                     }
                     else
                     {
@@ -91,7 +98,7 @@ namespace GymTool.Areas.Customers.Pages.Account
                                 EmpleadoId = _dataClient1.EmpleadoId,
                                 GimnasioId = _dataClient1.GimnasioId,
                                 membresiaLista = _clientMembership.getMembresiasCliente(_dataClient1.Membresia, iduser),
-                                FechaInscripcion = _dataClient1.FechaInscripcion,
+                                fechaInscirpion = _dataClient1.FechaInscripcion.ToString("dd/MM/yyyy HH:mm:ss"),
                                 Alcohol = _dataClient1.Alcohol,
                                 Fuma = _dataClient1.Fuma,
                                 DM = _dataClient1.DM,
@@ -101,6 +108,9 @@ namespace GymTool.Areas.Customers.Pages.Account
                                 Obesidad = _dataClient1.Obesidad,
                                 IdExpediente = _dataClient1.IdExpediente
                             };
+                            if (User.IsInRole(roleAdmin)) {
+                                Input.EmpleadoCodigo = codUsuario[0].Codigo;
+                            }
                             if (_dataInput != null)
                             {
                                 Input.ErrorMessage = _dataInput.ErrorMessage;
@@ -114,6 +124,10 @@ namespace GymTool.Areas.Customers.Pages.Account
                     {
                         membresiaLista = _clientMembership.getMembresias(iduser)
                     };
+                    if (User.IsInRole(roleAdmin))
+                    {
+                        Input.EmpleadoCodigo = codUsuario[0].Codigo;
+                    }
                 }
 
 
@@ -166,13 +180,14 @@ namespace GymTool.Areas.Customers.Pages.Account
                                 return Redirect(url);
                             }
                             else
-                            {//
+                            {
                                 return Redirect("/Clientes/Registrar?id=1");
                             }
                         }
                         else
                         {
                             var url = $"/Clientes/Informacion?id={_dataClient2.IdCliente}";
+                            anularValores();
                             return Redirect(url);
                         }
                     }
@@ -194,12 +209,14 @@ namespace GymTool.Areas.Customers.Pages.Account
                             else
                             {
                                 var url = $"/Clientes/Informacion?id={_dataClient1.IdCliente}";
+                                anularValores();
                                 return Redirect(url);
                             }
                         }
                         else
                         {
                             var url = $"/Clientes/Informacion?id={_dataClient1.IdCliente}";
+                            anularValores();
                             return Redirect(url);
                         }
 
@@ -222,23 +239,32 @@ namespace GymTool.Areas.Customers.Pages.Account
         {
             var valor = false;
 
-
             if (_signInManager.IsSignedIn(User))
             {
                 _dataInput = Input;
                 var succes = false;
                 var idgimnasio = 0;
+                var iduser = _userManager.GetUserId(User); //usuario admin iniciado
+                var administrador = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();//administrador
 
+                if (!administrador.Count.Equals(0))
+                {
+                    idgimnasio = administrador[0].GimnasioId;//id gimnasio del administrador
+                    succes = true;
+                }
 
                 if (ModelState.IsValid)
                 {
+
                     var clientList = _context.TbCliente.Where(u => u.Cedula.Equals(Input.Cedula)).ToList();
                     if (clientList.Count.Equals(0))
                     {
 
-                        var personalList = _context.TUsers.Where(u => u.Codigo.Equals(Input.EmpleadoCodigo)).ToList();
-                        if (!personalList.Count.Equals(0))
+                        var personalList = _context.TUsers.Where(u => u.Codigo.Equals(Input.EmpleadoCodigo) && u.GimnasioId.Equals(idgimnasio) ).ToList();
+                        
+                        if ( !personalList.Count.Equals(0))
                         {
+
                             var strategy = _context.Database.CreateExecutionStrategy();
                             await strategy.ExecuteAsync(async () =>
                             {
@@ -247,19 +273,10 @@ namespace GymTool.Areas.Customers.Pages.Account
 
                                     try
                                     {
-                                        var iduser = _userManager.GetUserId(User); //usuario admin iniciado
-                                        var administrador = _context.TUsers.Where(u => u.UsuarioId.Equals(iduser)).ToList();//administrador
-                                        var empleado = _context.TUsers.Where(u => u.Codigo.Equals(personalList[0].Codigo)).ToList();//administrador
                                         var membresiaid = _clientMembership.getMembresiaId(Input.Membresia);
 
-                                        if (!administrador.Count.Equals(0))
-                                        {
-                                            idgimnasio = administrador[0].GimnasioId;//id gimnasio del administrador
-                                            succes = true;
-                                        }
                                         var imageByte = await _uploadimage.ByteAvatarImageAsync(
                                                         Input.AvatarImage, _environment, "images/images/default.png");
-
                                         if (succes)
                                         {
 
@@ -274,7 +291,7 @@ namespace GymTool.Areas.Customers.Pages.Account
                                                 Direccion = Input.Direccion,
                                                 FechaNacimiento = Input.FechaNacimiento,
                                                 GimnasioId = idgimnasio,
-                                                EmpleadoId = empleado[0].IdUsers,
+                                                EmpleadoId = personalList[0].IdUsers,
                                                 Estado = true
                                             };
                                             await _context.AddAsync(cliente);
@@ -353,25 +370,22 @@ namespace GymTool.Areas.Customers.Pages.Account
 
             var valor = false;
 
-
             if (_signInManager.IsSignedIn(User))
             {
 
                 var strategy = _context.Database.CreateExecutionStrategy();
                 byte[] imageByte = null;
 
-
                 await strategy.ExecuteAsync(async () =>
                 {
                     using (var transaction = _context.Database.BeginTransaction())
                     {
-                        var personalList = _context.TUsers.Where(u => u.Codigo.Equals(Input.EmpleadoCodigo)).ToList();
+                        var personalList = _context.TUsers.Where(u => u.Codigo.Equals(Input.EmpleadoCodigo) && u.GimnasioId == _dataClient2.GimnasioId).ToList();
                         if (!personalList.Count.Equals(0))
                         {
 
                             try
                             {
-                                //var clientList = _customer.getTClient(Input.Cedula,_dataClient2.IdCliente);
                                 var clientList = _context.TbCliente.Where(u => u.Cedula.Equals(Input.Cedula) && u.IdCliente != _dataClient2.IdCliente).ToList();
 
                                 if (clientList.Count.Equals(0))
@@ -430,29 +444,20 @@ namespace GymTool.Areas.Customers.Pages.Account
                                 }
                                 else
                                 {
-                                    _dataInput = Input;
-                                    _dataInput.IdCliente = _dataClient2.IdCliente;
-                                    _dataInput.IdExpediente = _dataClient2.IdExpediente;
-                                    _dataInput.ErrorMessage = $"La cédula {Input.Cedula} ya esta registrado. ";
+                                    igualarValoresUpdate($"El cliente con cédula {Input.Cedula} ya esta registrado. ");
                                     valor = false;
                                 }
                             }
                             catch (Exception ex)
                             {
-                                _dataInput = Input;
-                                _dataInput.IdCliente = _dataClient2.IdCliente;
-                                _dataInput.IdExpediente = _dataClient2.IdExpediente;
-                                _dataInput.ErrorMessage = ex.Message;
+                                igualarValoresUpdate(ex.Message);
                                 transaction.Rollback();
                                 valor = false;
                             }
                         }
                         else
                         {
-                            _dataInput = Input;
-                            _dataInput.IdCliente = _dataClient2.IdCliente;
-                            _dataInput.IdExpediente = _dataClient2.IdExpediente;
-                            _dataInput.ErrorMessage = $"El código {Input.EmpleadoCodigo} no está registrado. ";
+                            igualarValoresUpdate($"El código {Input.EmpleadoCodigo} no está registrado. ");
                             valor = false;
                         }
                     }
@@ -466,7 +471,7 @@ namespace GymTool.Areas.Customers.Pages.Account
         {
             var valor = false;
 
-            if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
+            if (_signInManager.IsSignedIn(User) && User.IsInRole(roleAdmin))
             {
 
                 var strategy = _context.Database.CreateExecutionStrategy();
@@ -498,10 +503,7 @@ namespace GymTool.Areas.Customers.Pages.Account
                         }
                         catch (Exception ex)
                         {
-                            _dataInput = Input;
-                            _dataInput.IdCliente = _dataClient1.IdCliente;
-                            _dataInput.IdExpediente = _dataClient1.IdExpediente;
-                            _dataInput.ErrorMessage = ex.Message;
+                            igualarValoresDelete(ex.Message);
                             transaction.Rollback();
                             valor = false;
                         }
@@ -519,6 +521,22 @@ namespace GymTool.Areas.Customers.Pages.Account
             _dataInput = null;
         }
 
+        private void igualarValoresUpdate(String mensaje)
+        {
+            _dataInput = Input;
+            _dataInput.IdCliente = _dataClient2.IdCliente;
+            _dataInput.IdExpediente = _dataClient2.IdExpediente;
+            _dataInput.ErrorMessage = mensaje;
+
+        }
+
+        private void igualarValoresDelete(String mensaje)
+        {
+            _dataInput = Input;
+            _dataInput.IdCliente = _dataClient1.IdCliente;
+            _dataInput.IdExpediente = _dataClient1.IdExpediente;
+            _dataInput.ErrorMessage = mensaje;
+        }
 
     }
 }

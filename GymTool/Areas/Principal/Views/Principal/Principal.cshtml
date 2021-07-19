@@ -1,7 +1,124 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+
+@model GymTool.Areas.Principal.Models.InputModelAsistencia
 @{
-    ViewData["Title"] = "Principal";
+    ViewData["Title"] = "Agenda";
 }
 
-<h1>Principal</h1>
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
 
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+    <script src="~/js/Calendario.js" asp-append-version="true"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui-min.js"></script>
+    <script src="~/js/Unobtrusivo-ajax.js"></script>
+
+    <script>
+        $(function () {
+            $("#clienteNombre").autocomplete({
+                source: "/Principal/GetClientes"
+            });
+            //$.ajax({
+            //    type: "GET",
+            //    url: "/Principal/GetClientes",
+            //    success: function (data) {
+            //        alert(data)
+            //    },
+            //    error: function (error) {
+            //        alert('failed');
+            //    }
+            // });
+        });
+
+    </script>
+
+
+
+}
+<div class="container p-4" style="min-width: 340px">
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><span id="eventTitle"></span></h4>
+
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="pDetails"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h1>Agenda</h1>
+        </div>
+    </div>
+
+    <div class="row">
+
+
+
+        <div class="col-xl-4" style="min-width: 300px">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">Registrar asistencia</h3>
+            </div><!--<div class="panel-heading">-->
+            <form asp-controller="Principal" asp-action="RegistrarAsync" method="POST">
+                <div class="panel-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <input type="hidden" name="clienteId" id="clienteId" value="0" />
+
+                            <div class="form-group">
+                                <p>Cliente</p>
+                                <input asp-for="Input.clienteNombre" placeholder="Cliente" id="clienteNombre" name="clienteNombre" class="form-control" autofocus required>
+                                <span asp-validation-for="Input.clienteNombre" class="text-danger"></span>
+                            </div><!--<div  class="form-group">-->
+
+                            <div class="form-group">
+                                <p>Fecha de asistencia</p>
+                                <input type="date" asp-for="Input.FechaAsistencia" placeholder="Fecha asistencia" class="form-control">
+                                <span asp-validation-for="Input.FechaAsistencia" class="text-danger"></span>
+                            </div><!--<div  class="form-group">-->
+
+                            <div class="form-group">
+                                <p>Hora de asistencia</p>
+                                <input type="time" asp-for="Input.Hora" placeholder="18-00" class="form-control" autofocus required>
+                                <span asp-validation-for="Input.Hora" class="text-danger"></span>
+                            </div><!--<div  class="form-group">-->
+                            <button title="Agregar" type="submit" class="btn btn-primary btn-block">Agregar</button>
+
+                            <div class="form-group">
+                                <span class="text-danger">
+                                    @Html.DisplayFor(m => m.ErrorMessage)
+                                </span>
+                            </div><!--<div  class="form-group">-->
+
+                        </div><!--<div  class="card-body">-->
+                    </div><!--<div class="card">-->
+                </div><!--<div class="panel-body">-->
+            </form> <!-- <form method="post" enctype="multipart/form-data">-->
+            &nbsp;
+
+        </div>
+        &nbsp;
+        <div class="col" style="min-width: 300px">
+            <div id="calender"></div>
+            &nbsp;
+        </div>
+
+
+    </div>
+
+</div>

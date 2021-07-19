@@ -15,6 +15,8 @@ namespace GymTool.Areas.Users.Pages.Account
     {
         private SignInManager<IdentityUser> _signInManager;
         private LUser _user;
+        private String roleAdmin = "Administrador";
+
         public DetailsModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
@@ -26,7 +28,7 @@ namespace GymTool.Areas.Users.Pages.Account
         }
         public void OnGet(int id)
         {
-            if (_signInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
+            if (_signInManager.IsSignedIn(User) && User.IsInRole(roleAdmin))
             {
                 var data = _user.getTUsuariosAsync(null, id, "");
                 if (0 < data.Result.Count)
@@ -36,6 +38,22 @@ namespace GymTool.Areas.Users.Pages.Account
                         DataUser = data.Result.ToList().Last(),
                     };
                 }
+                else
+                {
+                    Response.Redirect("/Users/Users?area=Users");
+                    Input = new InputModel
+                    {
+                        DataUser = null,
+                    };
+                }
+            }
+            else
+            {
+                Response.Redirect("https://localhost:44312/");
+                Input = new InputModel
+                {
+                    DataUser = null,
+                };
             }
         }
         [BindProperty]

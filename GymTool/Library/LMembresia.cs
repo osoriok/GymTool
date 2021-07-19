@@ -103,6 +103,8 @@ namespace GymTool.Library
             var membresias = _context.TbMembresia.Where(u => u.GimnasioId.Equals(userGimnasio[0].GimnasioId)).ToList();
             List<SelectListItem> _selectLists = new List<SelectListItem>();
             List<TbMembresia> listTbMembresias;
+            List<Areas.Customers.Models.TbCliente> listTbClientes;
+            List<Areas.Customers.Models.TbExpediente> listTbExpedientes;
             var MembershipsList = new List<InputModelRegister>();
 
             if (valor == null && id.Equals(0))
@@ -117,13 +119,31 @@ namespace GymTool.Library
                 }
                 else
                 {
-                    listTbMembresias = _context.TbMembresia.Where(u => u.IdMembresia.Equals(id)).ToList();
+                    listTbMembresias = _context.TbMembresia.Where(u => u.IdMembresia.Equals(id) && u.Estado.Equals(true)).ToList();
                 }
             }
             if (!listTbMembresias.Count.Equals(0))
             {
+                int cantidad = 0;
+                listTbClientes = _context.TbCliente.Where(u => u.Estado.Equals(true)).ToList();
+
                 foreach (var item in listTbMembresias)
                 {
+                    cantidad = 0;
+
+                    if (!listTbClientes.Count.Equals(0))
+                    {
+                        foreach (var item2 in listTbClientes)
+                        {
+                            listTbExpedientes = _context.TbExpediente.Where(u => u.ClienteId.Equals(item2.IdCliente) && u.MembresiaId.Equals(item.IdMembresia)).ToList();
+
+                            if (!listTbExpedientes.Count.Equals(0))
+                            {
+                                cantidad++;
+                            }
+                        }
+                    }
+
                     MembershipsList.Add(new InputModelRegister
                     {
                         IdMembresia = item.IdMembresia,
@@ -132,6 +152,7 @@ namespace GymTool.Library
                         Nombre = item.Nombre,
                         Cantidad = item.Cantidad,
                         Monto = item.Monto,
+                        CantidadClientes = cantidad,
                         Periodo = item.Periodo
                     });
                 }

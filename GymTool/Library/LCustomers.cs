@@ -34,19 +34,19 @@ namespace GymTool.Library
             {
                 if (id.Equals(0))
                 {
-                    listTbClientes = _context.TbCliente.Where(u => (u.Cedula.StartsWith(valor) || u.Nombre.StartsWith(valor) ||
-                        u.Apellidos.StartsWith(valor) || u.Correo.StartsWith(valor)) && u.Estado.Equals(true)  ).ToList();
+                    listTbClientes = _context.TbCliente.Where(u => (u.Cedula.Contains(valor) || u.Nombre.Contains(valor) ||
+                        u.Apellidos.Contains(valor) || u.Direccion.Contains(valor) || u.Correo.Contains(valor)) && u.GimnasioId.Equals(userGimnasio[0].GimnasioId) && u.Estado.Equals(true)  ).ToList();
                 }
                 else
                 {
-                    listTbClientes = _context.TbCliente.Where(u => u.IdCliente.Equals(id)).ToList();
+                    listTbClientes = _context.TbCliente.Where(u => u.IdCliente.Equals(id) && u.GimnasioId.Equals(userGimnasio[0].GimnasioId) &&  u.Estado.Equals(true)).ToList();
                 }
             }
             if (!listTbClientes.Count.Equals(0))
             {
                 foreach (var item in listTbClientes)
                 {
-                    listTbExpedientes = _context.TbExpediente.Where(u => u.ClienteId.Equals(item.IdCliente) ).ToList();
+                    listTbExpedientes = _context.TbExpediente.Where(u => u.ClienteId.Equals(item.IdCliente)).ToList();
                     _listMembresias = _membresia.getMembresia(listTbExpedientes[0].MembresiaId);
 
                     var personal = _context.TUsers.Where(u => u.IdUsers.Equals(item.EmpleadoId)).ToList();
@@ -76,20 +76,18 @@ namespace GymTool.Library
                         Asma = listTbExpedientes[0].Asma,
                         Obesidad = listTbExpedientes[0].Obesidad,
                         Edad = edad.ToString()
-                    }) ; 
+                    });
                     contador++;
                 }
             }
+           
             return ClientesList;
         }
 
-        public List<TbCliente> getTClient(String cedula, int idcliente)
+        public List<TbCliente> getClientUser(int idEmpleado)
         {
             var listTClients = new List<TbCliente>();
-            using (var dbContext = new ApplicationDbContext())
-            {
-                listTClients = dbContext.TbCliente.Where(u => u.Cedula.Equals(cedula) && u.IdCliente != idcliente).ToList();
-            }
+            listTClients = _context.TbCliente.Where(u => u.EmpleadoId == idEmpleado).ToList();
 
             return listTClients;
         }

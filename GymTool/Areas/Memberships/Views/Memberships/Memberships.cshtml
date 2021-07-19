@@ -5,17 +5,17 @@
 }
 
 
-<div class="container p-4">
+<div class="container p-4" style="min-width: 340px">
 
 
     <div class="row">
-        <div class="col">
-            <h1>Membresías</h1>
+        <div class="col" style="text-align:left">
+            <h1>Membres&iacute;as</h1>
         </div>
         <div class="col">
             <div class="form-group float-right" style="margin-top: 15px;">
                 <div class="form-group">
-                    <a class="btn btn-primary text-white" asp-area="Memberships" asp-page="/Account/Register">Agregar</a>
+                    <a title="Agregar" class="btn btn-primary text-white" asp-area="Memberships" asp-page="/Account/Register">Agregar</a>
                 </div>
 
             </div>
@@ -35,7 +35,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-4">
-                            <input type="submit" value="Buscar" class="btn btn-success">
+                            <input type="submit" title="Buscar" value="Buscar" class="btn btn-success">
                         </div>
                     </div>
                     <div class="form-group">
@@ -59,7 +59,7 @@
 
                     <div class="form-group">
                         <div class="col-md-4">
-                            <input type="submit" class="btn btn-success" value="Registros">
+                            <input type="submit" title="Registros" class="btn btn-success" value="Registros">
                         </div>
                     </div>
                 </div>
@@ -74,35 +74,37 @@
     </div>
 
     <div class="row">
+        <div class="tablescroll">
 
-        <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Monto</th>
-                    <th scope="col">Periodo</th>
-                    <th scope="col">Acci&oacute;n</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.List)
-                {
+            <table class="table">
+                <thead class="thead-dark">
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Monto) </td>
-                        <td>@Html.DisplayFor(modelItem => item.Cantidad) @Html.DisplayFor(modelItem => item.Periodo) </td>
-                        <td>
-                            <a asp-route-id="@item.IdMembresia" asp-area="Memberships" asp-page="/Account/Details">
-                                <center><img class='imageUsers' src="@accion" /></center>
-                            </a>
-                        </td>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Monto</th>
+                        <th scope="col">Periodo</th>
+                        <th scope="col">Acci&oacute;n</th>
 
                     </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Monto) </td>
+                            <td>@Html.DisplayFor(modelItem => item.Cantidad) @Html.DisplayFor(modelItem => item.Periodo) </td>
+                            <td>
+                                <a asp-route-id="@item.IdMembresia" asp-area="Memberships" asp-page="/Account/Details">
+                                    <center><img title="Informaci&oacute;n" class='imageUsers' src="@accion" /></center>
+                                </a>
+                            </td>
 
-                }
-            </tbody>
-        </table>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

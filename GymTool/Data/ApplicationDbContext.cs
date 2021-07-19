@@ -1,5 +1,6 @@
 ﻿using GymTool.Areas.Customers.Models;
 using GymTool.Areas.Memberships.Models;
+using GymTool.Areas.Principal.Models;
 using GymTool.Areas.Users.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace GymTool.Data
         public DbSet<TbMembresia> TbMembresia { get; set; }//tabla membresia
         public DbSet<TbCliente> TbCliente { get; set; }//tabla cliente
         public DbSet<TbExpediente> TbExpediente { get; set; }//tabla expediente de cliente
+        public DbSet<TbAsistencia> TbAsistencia { get; set; }//tabla asistencia de cliente
 
 
     }

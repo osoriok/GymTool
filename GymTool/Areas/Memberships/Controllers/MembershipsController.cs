@@ -31,7 +31,7 @@ namespace GymTool.Areas.Memberships.Controllers
             _lmembresia = new LMembresia(context);
         }
 
-        public IActionResult Memberships(int id, String filtrar)
+        public IActionResult Memberships(int id, String filtrar, int registros)
         {
             if (_signInManager.IsSignedIn(User))
             {
@@ -43,11 +43,11 @@ namespace GymTool.Areas.Memberships.Controllers
                 {
                     var url = Request.Scheme + "://" + Request.Host.Value;
                     objects = new LPaginador<InputModelRegister>().paginador(data,
-                        id, 10, "Memberships", "Memberships", "Memberships", url);
+                        id, registros, "Memberships", "Memberships", "Memberships", url);
                 }
                 else
                 {
-                    objects[0] = "No hay datos que mostrar";
+                    objects[0] = "0";
                     objects[1] = "No hay datos que mostrar";
                     objects[2] = new List<InputModelRegister>();
                 }

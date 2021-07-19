@@ -43,6 +43,22 @@ namespace GymTool.Areas.Customers.Pages.Account
                         DataCustomer = data.ToList().Last(),
                     };
                 }
+                else
+                {
+                    Response.Redirect("/Customers/Customers?area=Customers");
+                    Input = new InputModel
+                    {
+                        DataCustomer = null,
+                    };
+                }
+            }
+            else
+            {
+                Response.Redirect("/");
+                Input = new InputModel
+                {
+                    DataCustomer = null,
+                };
             }
         }
         [BindProperty]

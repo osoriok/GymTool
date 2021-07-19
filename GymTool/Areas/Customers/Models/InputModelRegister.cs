@@ -10,32 +10,32 @@ namespace GymTool.Areas.Customers.Models
     public class InputModelRegister
     {
         //variables personal 
-        [Required(ErrorMessage = "El campo C&#243;digo de empleado es obligatorio. ")]
+        [Required(ErrorMessage = "El campo c&#243;digo de empleado es obligatorio. ")]
         public string EmpleadoCodigo { get; set; }
 
         //variables cedula
-        [Required(ErrorMessage = "El campo Cédula es obligatorio. ")]
+        [Required(ErrorMessage = "El campo c&eacute;dula es obligatorio. ")]
         public string Cedula { set; get; }
 
         //variables nombre
-        [Required(ErrorMessage = "El campo Nombre es obligatorio. ")]
+        [Required(ErrorMessage = "El campo nombre es obligatorio. ")]
         public string Nombre { set; get; }
 
         //variables apelllidos
-        [Required(ErrorMessage = "El campo Apellidos es obligatorio. ")]
+        [Required(ErrorMessage = "El campo apellidos es obligatorio. ")]
         public string Apellidos { set; get; }
 
         //variables Correo
-        [EmailAddress(ErrorMessage = "El Correo no es una dirección de correo electrónico válida. ")]
+        [EmailAddress(ErrorMessage = "Form&actue;ato de correo electr&oacute;nico no v&acute;lido. ")]
         public string Correo { set; get; }
 
         //variables Correo
         public string Direccion { set; get; }
 
         //variables Telefono
-        [Required(ErrorMessage = "El campo Teléfono es obligatorio. ")]
+        [Required(ErrorMessage = "El campo tel&eacute;fono es obligatorio. ")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{2})\)?[-. ]?([0-9]{2})[-. ]?([0-9]{4})$", ErrorMessage = "El formato del Tel&eacute;fono ingresado no es válido. ")]
+        [RegularExpression(@"^\(?([0-9]{2})\)?[-. ]?([0-9]{2})[-. ]?([0-9]{4})$", ErrorMessage = "S&oacute;lo se permiten n&uacute;meros. ")]
         public string Telefono { set; get; }
 
         //variables Fechas
@@ -44,6 +44,7 @@ namespace GymTool.Areas.Customers.Models
 
         public string Edad { set; get; }
         public DateTime FechaInscripcion { set; get; }
+        public string fechaInscirpion { set; get; }
         //variables Imagen
         public byte[] Imagen { get; set; }
 
@@ -58,7 +59,7 @@ namespace GymTool.Areas.Customers.Models
         public int IdExpediente { get; set; }
 
         //variables membres&iacute;a
-        [Required(ErrorMessage = "Seleccione una membresía. ")]
+        [Required(ErrorMessage = "Selecciona una membres&iacute;a. ")]
         public string Membresia { get; set; }
 
         //variables booleanas

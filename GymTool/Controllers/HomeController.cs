@@ -64,7 +64,7 @@ namespace GymTool.Controllers
                 }
                 else
                 {
-                    _model.ErrorMessage = "El o contraseña no son válidos. ";
+                    _model.ErrorMessage = "El correo o contraseña no son válidos. ";
                     return Redirect("/");
                 }
             }
