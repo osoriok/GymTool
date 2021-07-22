@@ -1,0 +1,54 @@
+﻿@model InputModelAsistencia
+
+<div class="modal fade" id="agregarAsistencia" style="min-width: 200px">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 id="agregarAsistenciaLabel">Registrar asistencia</h3>
+                <button type="button" class="close" data-dismiss="modal">x</button>
+            </div>
+
+            <div class="modal-body">
+
+                <form action="Agregar">
+                    <div class="form-group">
+                        <p>Cliente</p>
+                        <input asp-for="clienteNombre" placeholder="Cliente" id="clienteNombre" name="clienteNombre" class="form-control" autofocus required>
+                        <span asp-validation-for="clienteNombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <p>Fecha de asistencia</p>
+                        <input type="date" asp-for="FechaAsistencia" class="form-control">
+                        <span asp-validation-for="FechaAsistencia" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <p>Hora de asistencia</p>
+                        <input type="time" asp-for="Hora" class="form-control" autofocus required>
+                        <span asp-validation-for="Hora" class="text-danger"></span>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col text-right">
+                            <a class="btn btn-danger text-white" title="Cancelar" data-dismiss="modal">Cancelar</a>
+                       
+                            <button type="submit" class="btn btn-success" title="Agregar" data-save="modal">Agregar</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

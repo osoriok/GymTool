@@ -11,35 +11,37 @@
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
-
     <script src="~/js/Calendario.js" asp-append-version="true"></script>
+    <script src="~/js/ModalAsistencia.js" asp-append-version="true"></script>
+    @*<script src="~/js/ModalAsistenciasHora.js" asp-append-version="true"></script>*@
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui-min.js"></script>
-    <script src="~/js/Unobtrusivo-ajax.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui-min.js"></script>
+        <script src="~/js/Unobtrusivo-ajax.js"></script>*@
 
-    <script>
-        $(function () {
-            $("#clienteNombre").autocomplete({
-                source: "/Principal/GetClientes"
+    @*<script>
+            $(function () {
+                $("#clienteNombre").autocomplete({
+                    source: "/Principal/GetClientes"
+                });
+                //$.ajax({
+                //    type: "GET",
+                //    url: "/Principal/GetClientes",
+                //    success: function (data) {
+                //        alert(data)
+                //    },
+                //    error: function (error) {
+                //        alert('failed');
+                //    }
+                // });
             });
-            //$.ajax({
-            //    type: "GET",
-            //    url: "/Principal/GetClientes",
-            //    success: function (data) {
-            //        alert(data)
-            //    },
-            //    error: function (error) {
-            //        alert('failed');
-            //    }
-            // });
-        });
 
-    </script>
+        </script>*@
 
 
 
 }
 <div class="container p-4" style="min-width: 340px">
+    <div id="registrarAsistencia"></div>
 
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -53,69 +55,31 @@
                     <p id="pDetails"></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <a class="btn btn-danger text-white" title="Cerrar" data-dismiss="modal">Cerrar</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col">
+        <div class="col" style="text-align:left">
             <h1>Agenda</h1>
+        </div>
+        <div class="col">
+            <div class="form-group float-right" " style="margin-top: 15px;">
+                <button type="button" class="btn btn-primary text-white" title="Asistencia nueva" data-toggle="ajax-model" data-target="#agregarAsistencia" data-url="@Url.Action("Agregar")">Asistencia nueva</button>
+
+            </div>
+
         </div>
     </div>
 
+
+
     <div class="row">
 
-
-
-        <div class="col-xl-4" style="min-width: 300px">
-
-            <div class="panel-heading">
-                <h3 class="panel-title">Registrar asistencia</h3>
-            </div><!--<div class="panel-heading">-->
-            <form asp-controller="Principal" asp-action="RegistrarAsync" method="POST">
-                <div class="panel-body">
-                    <div class="card">
-                        <div class="card-body">
-                            <input type="hidden" name="clienteId" id="clienteId" value="0" />
-
-                            <div class="form-group">
-                                <p>Cliente</p>
-                                <input asp-for="Input.clienteNombre" placeholder="Cliente" id="clienteNombre" name="clienteNombre" class="form-control" autofocus required>
-                                <span asp-validation-for="Input.clienteNombre" class="text-danger"></span>
-                            </div><!--<div  class="form-group">-->
-
-                            <div class="form-group">
-                                <p>Fecha de asistencia</p>
-                                <input type="date" asp-for="Input.FechaAsistencia" placeholder="Fecha asistencia" class="form-control">
-                                <span asp-validation-for="Input.FechaAsistencia" class="text-danger"></span>
-                            </div><!--<div  class="form-group">-->
-
-                            <div class="form-group">
-                                <p>Hora de asistencia</p>
-                                <input type="time" asp-for="Input.Hora" placeholder="18-00" class="form-control" autofocus required>
-                                <span asp-validation-for="Input.Hora" class="text-danger"></span>
-                            </div><!--<div  class="form-group">-->
-                            <button title="Agregar" type="submit" class="btn btn-primary btn-block">Agregar</button>
-
-                            <div class="form-group">
-                                <span class="text-danger">
-                                    @Html.DisplayFor(m => m.ErrorMessage)
-                                </span>
-                            </div><!--<div  class="form-group">-->
-
-                        </div><!--<div  class="card-body">-->
-                    </div><!--<div class="card">-->
-                </div><!--<div class="panel-body">-->
-            </form> <!-- <form method="post" enctype="multipart/form-data">-->
-            &nbsp;
-
-        </div>
-        &nbsp;
         <div class="col" style="min-width: 300px">
             <div id="calender"></div>
-            &nbsp;
         </div>
 
 

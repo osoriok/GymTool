@@ -14,34 +14,20 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 1 "C:\Users\Usuario\source\repos\GymTool\GymTool\Areas\Principal\Pages\_ViewImports.cshtml"
-using GymTool;
+using GymTool.Areas.Principal;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 2 "C:\Users\Usuario\source\repos\GymTool\GymTool\Areas\Principal\Pages\_ViewImports.cshtml"
-using GymTool.Models;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 3 "C:\Users\Usuario\source\repos\GymTool\GymTool\Areas\Principal\Pages\_ViewImports.cshtml"
 using Newtonsoft.Json;
 
 #line default
 #line hidden
 #nullable disable
-#nullable restore
-#line 5 "C:\Users\Usuario\source\repos\GymTool\GymTool\Areas\Principal\Pages\_ViewImports.cshtml"
-using GymTool.Areas.Principal.Pages.Account;
-
-#line default
-#line hidden
-#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"13b82ef97968a56a4de533f67cf3e21d662f41aa", @"/Areas/Principal/Pages/_ViewStart.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"21501269cae395478b4ff586c501135c5f57efbc", @"/Areas/Principal/Pages/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b5fe0fb121be0aadd318b1f5e1f689ab4d2383cc", @"/Areas/Principal/Pages/_ViewImports.cshtml")]
     public class Areas_Principal_Pages__ViewStart : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

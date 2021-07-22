@@ -68,12 +68,12 @@
                                         <div class="col text-right">
                                             @if (Model.Input.IdMembresia.Equals(0))
                                             {
-                                                <a title="Cancelar" class="btn btn-danger text-white" asp-area="Memberships" asp-controller="Memberships" asp-action="Memberships">Cancelar</a>
+                                                <a title="Cancelar" class="btn btn-danger text-white" asp-controller="Memberships" >Cancelar</a>
                                                 <button type="submit" title="Registrar" class="btn btn-success">Registrar</button>
                                             }
                                             else
                                             {
-                                                <a title="Cancelar"  class="btn btn-danger text-white" asp-route-id="@Model.Input.IdMembresia" asp-area="Memberships" asp-page="/Account/Details">Cancelar</a>
+                                                <a title="Cancelar"  class="btn btn-danger text-white" asp-route-id="@Model.Input.IdMembresia" asp-area="Memberships" asp-page="Details">Cancelar</a>
                                                 <button type="submit" class="btn btn-success" title="Guardar" onclick="confirmar('Editar','Membresia')">Guardar</button>
                                             }
                                             <input type="hidden" name="accMembresia" id="accMembresia" value="false" />

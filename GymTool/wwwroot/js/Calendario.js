@@ -36,6 +36,7 @@
     function GenerateCalender(events) {
         $('#calender').fullCalendar('destroy');
         $('#calender').fullCalendar({
+            contentHeight: 550,
             defaultDate: new Date(),
             timeFormat: 'h(:mm)a',
             header: {

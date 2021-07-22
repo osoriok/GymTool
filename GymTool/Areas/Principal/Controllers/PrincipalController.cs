@@ -1,6 +1,7 @@
 ﻿using GymTool.Areas.Principal.Models;
 using GymTool.Controllers;
 using GymTool.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace GymTool.Areas.Principal.Controllers
 {
+    [Authorize]
     [Area("Principal")]
     public class PrincipalController : Controller
     {
@@ -32,7 +34,7 @@ namespace GymTool.Areas.Principal.Controllers
             _context = context;
 
         }
-        public IActionResult Principal()
+        public IActionResult Principal( )
         {
             if (_signInManager.IsSignedIn(User))
             {
@@ -41,7 +43,6 @@ namespace GymTool.Areas.Principal.Controllers
             else
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
-
             }
 
         }
@@ -92,29 +93,6 @@ namespace GymTool.Areas.Principal.Controllers
             return result;
         }
 
-        public JsonResult GetClientes(string term)
-        {
-            JsonResult result = new JsonResult(null);
-
-            if (_signInManager.IsSignedIn(User))
-            {
-                var clientes = _context.TbCliente.Where(u => (u.Cedula.Contains(term) || u.Nombre.Contains(term) ||
-                       u.Apellidos.Contains(term) || u.Direccion.Contains(term) || u.Correo.Contains(term) ) && u.Estado.Equals(true) ).Select(  u => u.Nombre).Take(5).ToList();
-                try
-                {
-                    result = new JsonResult(clientes);
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex);
-                }
-            }
-
-            
-
-            return result;
-        }
-
         public List<TbEventos> obtenerEventos(List<TbAsistencia> asistencias) {
 
             var eventos = new List<TbEventos>();
@@ -125,18 +103,20 @@ namespace GymTool.Areas.Principal.Controllers
             {
                 var contador = 1;
                 string hora = asistencia.FechaInicio.ToString("hh:mm tt");
+                hora = hora + " - " + asistencia.FechaFinal.ToString("hh:mm tt");
                 var fechaincio = asistencia.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss");
                 var fechafinal = asistencia.FechaFinal.ToString("yyyy-MM-dd HH:mm:ss");
+
+                var fechainciohora = asistencia.FechaInicio.ToString("yyyy-MM-dd HH");
+                var fechafinalhora = asistencia.FechaFinal.ToString("yyyy-MM-dd HH");
 
                 agendada = false;
                 var clientes = new List<Customers.Models.TbCliente>();
                 var cliente = _context.TbCliente.Where(u => u.IdCliente == asistencia.ClienteId && u.Estado.Equals(true)).ToList();
 
-                
-
                 foreach (var fecha in fechas)
                 {
-                    if (asistencia.FechaInicio.ToString().Equals(fecha))
+                    if (fechainciohora.Equals(fecha))
                     {
                         agendada = true;
                     }
@@ -148,14 +128,14 @@ namespace GymTool.Areas.Principal.Controllers
 
                     foreach (var asis in asistencias)
                     {
-                        if (asis.FechaInicio.Equals(asistencia.FechaInicio) && asis.IdAsistencia != asistencia.IdAsistencia)
+                        if (asis.FechaInicio.ToString("yyyy-MM-dd HH").Equals(asistencia.FechaInicio.ToString("yyyy-MM-dd HH")) && asis.IdAsistencia != asistencia.IdAsistencia)
                         {
                             cliente = _context.TbCliente.Where(u => u.IdCliente == asis.ClienteId && u.Estado.Equals(true)).ToList();
                             clientes.Add(cliente[0]);
                             contador++;
                         }
                     }
-                    fechas.Add(asistencia.FechaInicio.ToString());
+                    fechas.Add(asistencia.FechaInicio.ToString("yyyy-MM-dd HH"));
                     eventos.Add(new TbEventos
                     {
                         cantidadAsistencias = contador,
@@ -164,11 +144,49 @@ namespace GymTool.Areas.Principal.Controllers
                         horaAsistencia = hora,
                         listaCliente = clientes
                     });
-                } 
+                }
 
             }
 
             return eventos;
+        }
+        //action de registrar asistencia
+        [HttpGet]
+        public IActionResult Agregar() {
+            InputModelAsistencia asistencia = new InputModelAsistencia();
+
+            return PartialView("_AsistenciaModelPartial", asistencia);
+        }
+
+        [HttpGet]
+        public IActionResult Mostrar( )
+        {
+            ModelAsistenciasHora asistencias = new ModelAsistenciasHora();
+
+            return PartialView("_AsistenciasHoraModelPartial", asistencias);
+        }
+
+
+        //get clientes en autocomplete
+        public JsonResult GetClientes(string term)
+        {
+            JsonResult result = new JsonResult(null);
+
+            if (_signInManager.IsSignedIn(User))
+            {
+                var clientes = _context.TbCliente.Where(u => (u.Cedula.Contains(term) || u.Nombre.Contains(term) ||
+                       u.Apellidos.Contains(term) || u.Direccion.Contains(term) || u.Correo.Contains(term)) && u.Estado.Equals(true)).Select(u => u.Nombre).Take(5).ToList();
+                try
+                {
+                    result = new JsonResult(clientes);
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                }
+            }
+
+            return result;
         }
 
 
@@ -220,33 +238,7 @@ namespace GymTool.Areas.Principal.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegistrarAsync( )
-        {
-            if (_signInManager.IsSignedIn(User))
-            {
-                if (await ValidarCliente())
-                {
-                    if (await SaveAsync())
-                    {
-                        anularValores();
-                        return Redirect("/Principal/Principal");
-                    }
-                    else
-                    {
-                        return Redirect("/Principal/Principal?id=1");
-                    }
-                }
-                else
-                {
-                    return Redirect("/Principal/Principal?id=1");
-                } 
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-        }
+
 
         private async Task<bool> ValidarCliente()
         {
@@ -254,9 +246,10 @@ namespace GymTool.Areas.Principal.Controllers
             if (_signInManager.IsSignedIn(User))
             {
                 _dataInput = Input;
+                _dataInput.ErrorMessage = $"El cliente {Input.clienteNombre} no está registrado. ";
 
-                if (ModelState.IsValid)
-                {
+                //if (ModelState.IsValid)
+                //{
                     //var clientList = _context.TbCliente.Where(u => Input.clienteNombre.Equals( u.Cedula) ).ToList();
                     //if (!clientList.Count.Equals(0))
                     //{
@@ -264,10 +257,10 @@ namespace GymTool.Areas.Principal.Controllers
                     //}
                     //else
                     //{
-                        _dataInput.ErrorMessage = $"El cliente {Input.clienteNombre} no está registrado. ";
-                        valor = false;
+                        //_dataInput.ErrorMessage = $"El cliente {Input.clienteNombre} no está registrado. ";
+                        //valor = false;
                     //}
-                }
+                //}
 
             }
             return valor;
@@ -275,7 +268,7 @@ namespace GymTool.Areas.Principal.Controllers
 
         private async Task<bool> SaveAsync()
         {
-            var valor = false;
+            var valor = true;
             if (_signInManager.IsSignedIn(User))
             {
                 _dataInput = Input;
@@ -287,7 +280,7 @@ namespace GymTool.Areas.Principal.Controllers
 
 
             }
-                return true;
+            return valor;
         }
 
 

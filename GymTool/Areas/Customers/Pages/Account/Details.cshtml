@@ -14,7 +14,7 @@
 
     <div class="container p-4" style="min-width: 320px">
         <h1>
-            <a class="btn btn-primary text-white" title="Atr&aacute;s" asp-area="Customers" asp-controller="Customers" asp-action="Customers">Atr&aacute;s</a>
+            <a class="btn btn-primary text-white" title="Atr&aacute;s" asp-controller="Customers">Atr&aacute;s</a>
             @name
         </h1>
 
@@ -293,7 +293,7 @@
                         </div>
                             <div class="col text-right">
 
-                                <form asp-area="Customers" asp-page="/Account/Register" method="post">
+                                <form asp-area="Customers" asp-page="Register" method="post">
                                     @{
                                         var dataCustomer = JsonConvert.SerializeObject(Model.Input.DataCustomer);
                                     }

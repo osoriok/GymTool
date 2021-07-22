@@ -1,0 +1,48 @@
+﻿@model ModelAsistenciasHora
+
+@{ 
+    var cont = 1;
+}
+
+<div class="modal fade" id="agregarAsistencia" style="min-width: 200px">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 id="agregarAsistenciaLabel">Asistencia @Model.titulo</h3>
+                <button type="button" class="close" data-dismiss="modal">x</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <p>D&iacute;a de asistencia: @Model.fechaInicio</p>
+                </div>
+
+                <div class="form-group">
+                    <p>Hora de asistencia: @Model.descripcion</p>
+                </div>
+                <div class="form-group">
+                    <p>Clientes: </p>
+                    @foreach (var cliente in Model.listaClientes)
+                    {
+                        <p>@cont ) @cliente.Nombre @cliente.Apellidos</p>
+                        cont++;
+                    }
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col text-right">
+                            <a class="btn btn-danger text-white" title="Cancelar" data-dismiss="modal">Cerrar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

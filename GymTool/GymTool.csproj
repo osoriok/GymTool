@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Areas\Principal\Views\Principal\RegisterAsistencia.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
@@ -24,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Measures\Controllers\" />
+    <Folder Include="Areas\Measures\Data\" />
+    <Folder Include="Areas\Measures\Models\" />
+    <Folder Include="Areas\Measures\Views\" />
     <Folder Include="Areas\Memberships\Data\" />
   </ItemGroup>
 

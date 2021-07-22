@@ -12,7 +12,7 @@ namespace GymTool.Areas.Principal.Models
         [Required(ErrorMessage = "Selecciona la fecha de asistencia.")]
         public DateTime FechaAsistencia { set; get; }
         [Required(ErrorMessage = "Ingrese la hora de asistencia.")]
-        public int Hora { set; get; }
+        public string Hora { set; get; }
         [TempData]
         public string ErrorMessage { get; set; }
     }

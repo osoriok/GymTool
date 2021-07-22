@@ -157,11 +157,9 @@ C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Membe
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Memberships\Views\Memberships\Memberships.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Memberships\Views\_ViewImports.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Memberships\Views\_ViewStart.cshtml.g.cs
-C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Pages\Account\Asistencia.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Pages\_ViewImports.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Pages\_ViewStart.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Views\Principal\Principal.cshtml.g.cs
-C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Views\Principal\_RegisterAsistencia.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Views\_ViewStart.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Users\Pages\Account\Details.cshtml.g.cs
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Users\Pages\Account\Register.cshtml.g.cs
@@ -187,3 +185,7 @@ C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\GymTool.dll
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\ref\GymTool.dll
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\GymTool.pdb
 C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\GymTool.genruntimeconfig.cache
+C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Views\_ViewImports.cshtml.g.cs
+C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Views\Principal\_AsistenciaModelPartial.cshtml.g.cs
+C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Views\_ViewImports1.cshtml.g.cs
+C:\Users\Usuario\source\repos\GymTool\GymTool\obj\Debug\net5.0\Razor\Areas\Principal\Views\Principal\_AsistenciasHoraModelPartial.cshtml.g.cs
